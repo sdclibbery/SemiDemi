@@ -15,7 +15,7 @@ type Score = Int
 data Flow = Fuzzy MatchString | Exact MatchString | Version deriving (Show, Eq)
 data Disallowed = Disallowed MatchString deriving (Show, Eq)
 
-data Desc = Desc { getFlow :: [Flow], getDisallowed :: [Disallowed] } deriving (Show, Eq)
+data Desc = Desc [Flow] [Disallowed] deriving (Show, Eq)
 
 score :: Desc -> MatchString -> Maybe Score
 score (Desc fs ds) t = do
@@ -36,10 +36,10 @@ scoreFlow fs t = go 0 fs t
             go (s + s') fs t'
 
 exact :: MatchString -> MatchString -> Maybe (Score, MatchString)
-exact needle t = if isPrefixOf needle t' then Just ((l - diff), drop l t') else Nothing
+exact needle t = if isPrefixOf needle t' then Just (l - dropped, drop l t') else Nothing
     where
         t' = dropWhile (not . (== (head needle))) t
-        diff = length t - length t'
+        dropped = length t - length t'
         l = length needle
 
 version :: MatchString -> Maybe (Score, MatchString)
@@ -52,6 +52,7 @@ version t = if matched > 0 then Just (1 - dropped, t'') else Nothing
         isVersion c = isDigit c || c == '.'
 
 fuzzy :: MatchString -> MatchString -> (Score, MatchString)
+-- Use lev over all prefixes; pick where editdistance is lowest
 fuzzy needle t = (0, t)
 
 
