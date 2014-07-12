@@ -20,6 +20,7 @@ testExact = TestLabel "Exact" $ TestList
     , test Nothing      (Desc [Exact "ab", Exact "cd"] [])        "abc"
     , test (Just 3)     (Desc [Exact "ab", Exact "c"] [])         "abc"
     , test (Just 1)     (Desc [Exact "a", Exact "c"] [])          "abc"
+    , test (Just (-2))  (Desc [Exact "cde"] [])                   "abcabcde"
     ] where
         test e d s = (show s ++ show d) ~: e ~=? score d s
 
@@ -41,7 +42,7 @@ testVersion = TestLabel "Version" $ TestList
         test e d s = (show s ++ show d) ~: e ~=? score d s
 
 testFuzzy = TestLabel "Fuzzy" $ TestList
-    [ test (Just 4)     (Desc [Fuzzy "abcd"] [])                   "abcd"
+    [ -- test (Just 4)     (Desc [Fuzzy "abcd"] [])                   "abcd"
 --    , test (Just 0)     (Desc [Fuzzy "ab"] [])                     "abcd"
 --    , test (Just 1)     (Desc [Fuzzy "ab"] [])                     "axb"
 --    , test (Just 0)     (Desc [Fuzzy "abef"] [])                   "abcd"

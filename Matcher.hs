@@ -5,6 +5,7 @@ module Matcher (
     score
 ) where
 import Data.List
+import Data.List.Split
 import Data.Array
 import Data.Maybe
 import Data.Char
@@ -36,11 +37,9 @@ scoreFlow fs t = go 0 fs t
             go (s + s') fs t'
 
 exact :: MatchString -> MatchString -> Maybe (Score, MatchString)
-exact needle t = if isPrefixOf needle t' then Just (l - dropped, drop l t') else Nothing
-    where
-        t' = dropWhile (not . (== (head needle))) t
-        dropped = length t - length t'
-        l = length needle
+exact needle t = do
+    (dropped, matched, t') <- findString needle t
+    return (matched - dropped, t')
 
 version :: MatchString -> Maybe (Score, MatchString)
 version t = if matched > 0 then Just (1 - dropped, t'') else Nothing
@@ -53,10 +52,21 @@ version t = if matched > 0 then Just (1 - dropped, t'') else Nothing
 
 fuzzy :: MatchString -> MatchString -> (Score, MatchString)
 -- Use lev over all prefixes; pick where editdistance is lowest
-fuzzy needle t = (0, t)
+fuzzy needle t = (0,t)
+    where
+        prefixes = zipWith take [1..l] $ repeat t
+        best = {- Is list of scores for reach prefix; zip with prefixes and return lowest score... -} map (editDistance needle) prefixes
+        l = length t
 
+-- Helpers
 
-
+-- !! VERY inefficient
+findString :: MatchString -> MatchString -> Maybe (Int, Int, MatchString)
+findString needle t = case splits of
+    (dropped:matched:ts) -> Just (length dropped, length matched, concat ts)
+    _ -> Nothing
+    where
+        splits = split (onSublist needle) t
 
 editDistance :: (Eq a) => [a] -> [a] -> Int
 editDistance xs ys = levMemo ! (n, m)
