@@ -9,6 +9,7 @@ import Data.List.Split
 import Data.Array
 import Data.Maybe
 import Data.Char
+import Data.Ord
 
 type MatchString = String
 type Score = Int
@@ -51,12 +52,11 @@ version t = if matched > 0 then Just (1 - dropped, t'') else Nothing
         isVersion c = isDigit c || c == '.'
 
 fuzzy :: MatchString -> MatchString -> (Score, MatchString)
--- Use lev over all prefixes; pick where editdistance is lowest
-fuzzy needle t = (0,t)
+fuzzy needle t = (l - ed, drop l t)
     where
-        prefixes = zipWith take [1..l] $ repeat t
-        best = {- Is list of scores for reach prefix; zip with prefixes and return lowest score... -} map (editDistance needle) prefixes
-        l = length t
+        prefixes = zipWith take [0 .. length t] $ repeat t
+        (ed, p) = minimumBy (comparing fst) $ map (\p -> (editDistance needle p, p)) prefixes
+        l = length p
 
 -- Helpers
 

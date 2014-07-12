@@ -42,15 +42,15 @@ testVersion = TestLabel "Version" $ TestList
         test e d s = (show s ++ show d) ~: e ~=? score d s
 
 testFuzzy = TestLabel "Fuzzy" $ TestList
-    [ -- test (Just 4)     (Desc [Fuzzy "abcd"] [])                   "abcd"
---    , test (Just 0)     (Desc [Fuzzy "ab"] [])                     "abcd"
---    , test (Just 1)     (Desc [Fuzzy "ab"] [])                     "axb"
---    , test (Just 0)     (Desc [Fuzzy "abef"] [])                   "abcd"
---    , test (Just 2)     (Desc [Fuzzy "abcd"] [])                   "ab"
---    , test (Just 4)     (Desc [Fuzzy "ab", Fuzzy "cd"] [])      "abcd"
---    , test (Just 0)     (Desc [] [])                                  "abcd"
---    , test (Just 2)     (Desc [Fuzzy "abcd"] [])                   "ab"
---    , test (Just 0)     (Desc [Fuzzy "ab", Fuzzy "cd"] [])      "cdab"
+    [ test (Just 4)     (Desc [Fuzzy "abcd"] [])                   "abcd"
+    , test (Just 0)     (Desc [Fuzzy "ab"] [])                     "abcd"
+    , test (Just (-4))  (Desc [Fuzzy "ab"] [])                     "axxxb"
+    , test (Just (-2))  (Desc [Fuzzy "abef"] [])                   "abcd"
+    , test (Just 0)     (Desc [Fuzzy "abcd"] [])                   "ab"
+    , test (Just 4)     (Desc [Fuzzy "ab", Fuzzy "cd"] [])         "abcd"
+    , test (Just (-4))  (Desc [] [])                               "abcd"
+    , test (Just (-5))  (Desc [Fuzzy "ab"] [])                     "xyz"
+    , test (Just (-2))  (Desc [Fuzzy "ab", Fuzzy "cd"] [])         "cdab"
     ] where
         test e d s = (show s ++ show d) ~: e ~=? score d s
 
