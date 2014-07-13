@@ -29,7 +29,6 @@ scoreFlow :: [Flow] -> MatchString -> Maybe Score
 scoreFlow fs t = go 0 fs t
     where
         go s [] t = return $ s - length t
-        go s fs "" = return $ s - length fs
         go s (f:fs) t = do
             (s', t') <- case f of
                 (Exact e) -> exact e t
@@ -52,11 +51,9 @@ version t = if matched > 0 then Just (1 - dropped, t'') else Nothing
         isVersion c = isDigit c || c == '.'
 
 fuzzy :: MatchString -> MatchString -> (Score, MatchString)
-fuzzy needle t = (l - ed, drop l t)
+fuzzy needle t = (s, t')
     where
-        prefixes = zipWith take [0 .. length t] $ repeat t
-        (ed, p) = minimumBy (comparing fst) $ map (\p -> (editDistance needle p, p)) prefixes
-        l = length p
+        (_, (s, t')) = fuzzyMatch (0, (-(length t + length needle), "")) needle t
 
 -- Helpers
 
@@ -68,16 +65,17 @@ findString needle t = case splits of
     where
         splits = split (onSublist needle) t
 
-editDistance :: (Eq a) => [a] -> [a] -> Int
-editDistance xs ys = levMemo ! (n, m)
-  where levMemo = array ((0,0),(n,m)) [((i,j),lev i j) | i <- [0..n], j <- [0..m]]
-        n = length xs
-        m = length ys
-        xa = listArray (1, n) xs
-        ya = listArray (1, m) ys
-        lev 0 v = v
-        lev u 0 = u
-        lev u v
-          | xa ! u == ya ! v = levMemo ! (u-1, v-1)
-          | otherwise        = 1 + minimum [levMemo ! (u, v-1),
-                                            levMemo ! (u-1, v),                                          levMemo ! (u-1, v-1)] 
+-- Keep score, matching along the way. Like a modified Levenshtein algorithm.
+-- Returns the score and the remaining leftover string from the best match.
+-- When no match is found, have to try discarding a char from each string and recursively see which worked better.
+-- Score +1 for a matching char, and -1 for every char that has to be discarded.
+fuzzyMatch :: (Eq a, Show a) => (Int, (Int, [a])) -> [a] -> [a] -> (Int, (Int, [a]))
+fuzzyMatch r [] [] = r
+fuzzyMatch (s, b) [] ts  = (s - length ts, b)
+fuzzyMatch (s, b) ns []  = (s - length ns, b)
+fuzzyMatch (s, b) (n:ns) (t:ts)
+    | n == t = fuzzyMatch (s + 1, (s + 1 - length ns, ts)) ns ts -- !! Inefficient! calcing length ns every time
+    | otherwise = maximumBy (comparing fst) [
+            fuzzyMatch (s - 1, b) ns (t:ts),
+            fuzzyMatch (s - 1, b) (n:ns) ts
+        ]
