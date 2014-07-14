@@ -61,6 +61,7 @@ testExamples = TestLabel "Examples" $ TestList
     [ test (Just 104) desc "Mozilla/5.0(compatible; U; InfiNet 0.1; Diga) AppleWebKit/420+ (KHTML, like Gecko)(avdn/Panasonic.bd.pro4r.2014)"
     , test (Just 104) desc "Mozilla/1234(compatible; U; InfiNet 1.2.3.4; Diga) AppleWebKit/5678+ (KHTML, like Gecko)(avdn/Panasonic.bd.pro4r.2014)"
     , test Nothing    desc "Mozilla/5.0(compatible; U; InfiNet 0.1; Diga) AppleWebKit/420+ (KHTML, like Gecko)(avdn/Panasonic.bd.pro5r.2014)"
+    , test (Just 102) desc "Mozilla/5.0compatible; U; InfiNet 0.1; Diga) AppleWebKit/420+ (KHTML, like Gecko)(avdn/Panasonic.bd.pro4r.2014)"
     , test (Just 84) desc "Mozilla/5.0(compatible; X; InfiNet 0.1; Diga; woo) AppleWebKit/420 (KHTML, like Gecko yeah)(avdn/Panasonic.bd.pro4r.2014) blah"
     ] where
         test e d s = (show s ++ show d) ~: e ~=? score d s

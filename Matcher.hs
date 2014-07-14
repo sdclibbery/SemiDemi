@@ -51,24 +51,21 @@ version t = if matched > 0 then Just (1 - dropped, t'') else Nothing
         isVersion c = isDigit c || c == '.'
 
 fuzzy :: MatchString -> MatchString -> (Score, MatchString)
-fuzzy needle t = (s, t')
+fuzzy needle t = (s, tr ++ remainder)
     where
-        (_, (s, t')) = fuzzyMatch (0, (-(length t + length needle), "")) needle t
+        (_, (s, tr)) = fuzzyMatch (0, (-(length t' + length needle), "")) needle t'
+        t' = take lim t -- Limit the amount of the string to match against; limits fuzziness of match, but runs faster
+        remainder = drop lim t
+        lim = max 10 $ 2 * length needle
 
 -- Helpers
 
--- !! VERY inefficient
 findString :: MatchString -> MatchString -> Maybe (Int, Int, MatchString)
 findString needle t = case splits of
-    (dropped:matched:ts) -> Just (length dropped, length matched, concat ts)
+    (dropped:matched:ts) -> Just (length dropped, length matched, concat ts) -- !! Very inefficient
     _ -> Nothing
     where
         splits = split (onSublist needle) t
-
-memoString = Memo.list Memo.char
-memoInt = Memo.integral
-type FuzzyState = (Int, (Int, String))
-memoState = Memo.pair memoInt (Memo.pair memoInt memoString)
 
 -- Keep score, matching along the way. Like a modified Levenshtein algorithm.
 -- Returns the score and the remaining leftover string from the best match.
@@ -82,9 +79,13 @@ fuzzyMatch = fuzzyMatchMemo
         go (s, b) [] ts  = (s - length ts, b)
         go (s, b) ns []  = (s - length ns, b)
         go (s, b) (n:ns) (t:ts)
-            | n == t = fuzzyMatchMemo (s + 1, (s + 1 - length ns, ts)) ns ts -- !! Inefficient! calcing length of ns on every match
+            | n == t = fuzzyMatchMemo (s + 1, (s + 1 - length ns, ts)) ns ts -- !! Inefficient! calcing remaining length of ns on every match
             | otherwise = maximumBy (comparing fst) [
                     fuzzyMatchMemo (s - 1, b) ns (t:ts),
                     fuzzyMatchMemo (s - 1, b) (n:ns) ts
                 ]
+memoString = Memo.list Memo.char
+memoInt = Memo.integral
+type FuzzyState = (Int, (Int, String))
+memoState = Memo.pair memoInt (Memo.pair memoInt memoString)
 
