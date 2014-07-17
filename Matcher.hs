@@ -51,12 +51,11 @@ version t = if matched > 0 then Just (1 - dropped, t'') else Nothing
         isVersion c = isDigit c || c == '.'
 
 fuzzy :: MatchString -> MatchString -> (Score, MatchString)
-fuzzy needle t = (s, tr ++ remainder)
+fuzzy needle t = go 0 needle t
     where
-        (_, (s, tr)) = fuzzyMatch (0, (-(length t' + length needle), "")) needle t'
-        t' = take lim t -- Limit the amount of the string to match against; limits fuzziness of match, but runs faster
-        remainder = drop lim t
-        lim = max 10 $ 2 * length needle
+        go s [] t = (s, t)
+        go s n [] = (s - length n, "")
+        go s (n:ns) (t:ts) = if n == t then go (s+1) ns ts else go (s-1) (n:ns) ts -- All needle chars must be matched.
 
 -- Helpers
 
@@ -66,6 +65,16 @@ findString needle t = case splits of
     _ -> Nothing
     where
         splits = split (onSublist needle) t
+
+-- !!! Full levenshtein style fuzzy matching. Good but slow.
+{-
+fuzzy :: MatchString -> MatchString -> (Score, MatchString)
+fuzzy needle t = (s, tr ++ remainder)
+    where
+        (_, (s, tr)) = fuzzyMatch (0, (-(length t' + length needle), "")) needle t'
+        t' = take lim t -- Limit the amount of the string to match against; limits fuzziness of match, but runs faster
+        remainder = drop lim t
+        lim = max 10 $ 2 * length needle
 
 -- Keep score, matching along the way. Like a modified Levenshtein algorithm.
 -- Returns the score and the remaining leftover string from the best match.
@@ -88,4 +97,4 @@ memoString = Memo.list Memo.char
 memoInt = Memo.integral
 type FuzzyState = (Int, (Int, String))
 memoState = Memo.pair memoInt (Memo.pair memoInt memoString)
-
+-}
