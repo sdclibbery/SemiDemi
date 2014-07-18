@@ -17,34 +17,41 @@ parseDesc = do
 	ds <- P.manyTill (parseDisallowed <|> fail "Parse error") P.endOfInput
 	return $ M.Desc fs ds
 
+parseEscaped :: Char -> P.Parser String
+parseEscaped c = do
+	s <- nonEscaped
+	return s
+	where
+		nonEscaped = P.many1 $ P.notChar c
+
 parseFuzzy :: P.Parser M.Flow
 parseFuzzy = do
-	f <- P.many1 $ P.notChar '|'
+	f <- parseEscaped '['
 	return $ M.Fuzzy f
 
 parseFullFuzzy :: P.Parser M.Flow
 parseFullFuzzy = do
-	P.string "|?"
-	e <- P.many1 $ P.notChar '|'
-	P.string "|"
+	P.string "[?"
+	e <- parseEscaped ']'
+	P.string "]"
 	return $ M.FullFuzzy e
 
 parseExact :: P.Parser M.Flow
 parseExact = do
-	P.string "|+"
-	e <- P.many1 $ P.notChar '|'
-	P.string "|"
+	P.string "[+"
+	e <- parseEscaped ']'
+	P.string "]"
 	return $ M.Exact e
 
 parseVersion :: P.Parser M.Flow
 parseVersion = do
-	P.string "|v|"
+	P.string "[v]"
 	return M.Version
 
 parseDisallowed :: P.Parser M.Disallowed
 parseDisallowed = do
-	P.string "|-"
-	d <- P.many1 $ P.notChar '|'
-	P.string "|"
+	P.string "[-"
+	d <- parseEscaped ']'
+	P.string "]"
 	return $ M.Disallowed d
 
