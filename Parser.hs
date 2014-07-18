@@ -13,7 +13,7 @@ parse t = P.parseOnly parseDesc $ pack t
 
 parseDesc :: P.Parser M.Desc
 parseDesc = do
-	fs <- P.many' (parseVersion <|> parseExact <|> parseFuzzy)
+	fs <- P.many' (parseVersion <|> parseExact <|> parseFuzzy <|> parseFullFuzzy)
 	ds <- P.manyTill (parseDisallowed <|> fail "Parse error") P.endOfInput
 	return $ M.Desc fs ds
 
@@ -21,6 +21,13 @@ parseFuzzy :: P.Parser M.Flow
 parseFuzzy = do
 	f <- P.many1 $ P.notChar '|'
 	return $ M.Fuzzy f
+
+parseFullFuzzy :: P.Parser M.Flow
+parseFullFuzzy = do
+	P.string "|?"
+	e <- P.many1 $ P.notChar '|'
+	P.string "|"
+	return $ M.FullFuzzy e
 
 parseExact :: P.Parser M.Flow
 parseExact = do

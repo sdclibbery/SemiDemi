@@ -14,7 +14,7 @@ import qualified Data.MemoCombinators as Memo
 type MatchString = String
 type Score = Int
 
-data Flow = Fuzzy MatchString | Exact MatchString | Version deriving (Show, Eq)
+data Flow = Fuzzy MatchString | FullFuzzy MatchString | Exact MatchString | Version deriving (Show, Eq)
 data Disallowed = Disallowed MatchString deriving (Show, Eq)
 
 data Desc = Desc [Flow] [Disallowed] deriving (Show, Eq)
@@ -34,6 +34,7 @@ scoreFlow fs t = go 0 fs t
                 (Exact e) -> exact e t
                 Version -> version t
                 (Fuzzy f) -> return $ fuzzy f t
+                (FullFuzzy f) -> return $ fullFuzzy f t
             go (s + s') fs t'
 
 exact :: MatchString -> MatchString -> Maybe (Score, MatchString)
@@ -57,6 +58,15 @@ fuzzy needle t = go 0 needle t
         go s n [] = (s - length n, "")
         go s (n:ns) (t:ts) = if n == t then go (s+1) ns ts else go (s-1) (n:ns) ts -- All needle chars must be matched.
 
+fullFuzzy :: MatchString -> MatchString -> (Score, MatchString)
+fullFuzzy needle t = (s, tr ++ remainder)
+    where
+        (_, (s, tr)) = fuzzyMatch (0, (-(length t' + length needle), "")) needle t'
+        t' = take lim t -- Limit the amount of the string to match against; limits fuzziness of match, but runs faster
+        remainder = drop lim t
+        lim = max 10 $ 2 * length needle
+
+
 -- Helpers
 
 findString :: MatchString -> MatchString -> Maybe (Int, Int, MatchString)
@@ -66,16 +76,7 @@ findString needle t = case splits of
     where
         splits = split (onSublist needle) t
 
--- !!! Full levenshtein style fuzzy matching. Good but slow.
-{-
-fuzzy :: MatchString -> MatchString -> (Score, MatchString)
-fuzzy needle t = (s, tr ++ remainder)
-    where
-        (_, (s, tr)) = fuzzyMatch (0, (-(length t' + length needle), "")) needle t'
-        t' = take lim t -- Limit the amount of the string to match against; limits fuzziness of match, but runs faster
-        remainder = drop lim t
-        lim = max 10 $ 2 * length needle
-
+-- Full levenshtein style fuzzy matching. Good but slow.
 -- Keep score, matching along the way. Like a modified Levenshtein algorithm.
 -- Returns the score and the remaining leftover string from the best match.
 -- When no match is found, have to try discarding a char from each string and recursively see which worked better.
@@ -97,4 +98,3 @@ memoString = Memo.list Memo.char
 memoInt = Memo.integral
 type FuzzyState = (Int, (Int, String))
 memoState = Memo.pair memoInt (Memo.pair memoInt memoString)
--}

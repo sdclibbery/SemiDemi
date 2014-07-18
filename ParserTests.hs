@@ -7,6 +7,7 @@ import Parser
 
 tests = TestLabel "Parser" $ TestList
     [ testFuzzy
+    , testFullFuzzy
     , testVersion
     , testExact
     , testDisallowed
@@ -17,6 +18,12 @@ testFuzzy = TestLabel "Fuzzy" $ TestList
     [ test (Right $ Desc [] [])                                       ""
     , test (Right $ Desc [Fuzzy "abc"] [])                            "abc"
     , test (Right $ Desc [Fuzzy "abc (-) +hello v good.!!!"] [])      "abc (-) +hello v good.!!!"
+    ] where
+        test e s = (show s) ~: e ~=? parse s
+
+testFullFuzzy = TestLabel "FullFuzzy" $ TestList
+    [ test (Right $ Desc [FullFuzzy "abc"] [])                                         "|?abc|"
+    , test (Right $ Desc [Fuzzy "123", FullFuzzy "abc (-) +hello v good.!!!"] [])      "123|?abc (-) +hello v good.!!!|"
     ] where
         test e s = (show s) ~: e ~=? parse s
 

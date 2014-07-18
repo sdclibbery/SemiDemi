@@ -9,6 +9,7 @@ tests = TestLabel "Matcher" $ TestList
     , testDisallowed
     , testVersion
     , testFuzzy
+    , testFullFuzzy
     , testExamples
     ]
 
@@ -54,6 +55,21 @@ testFuzzy = TestLabel "Fuzzy" $ TestList
     , test (Just (-4))  (Desc [] [])                               "abcd"
     , test (Just (-5))  (Desc [Fuzzy "ab"] [])                     "xyz"
     , test (Just (-2))  (Desc [Fuzzy "ab", Fuzzy "cd"] [])         "cdab"
+    ] where
+        test e d s = (show s ++ show d) ~: e ~=? score d s
+
+testFullFuzzy = TestLabel "FullFuzzy" $ TestList
+    [ test (Just 4)     (Desc [FullFuzzy "abcd"] [])                   "abcd"
+    , test (Just 0)     (Desc [FullFuzzy "ab"] [])                     "abcd"
+    , test (Just (-1))  (Desc [FullFuzzy "ab"] [])                     "axxxb"
+    , test (Just (-2))  (Desc [FullFuzzy "abef"] [])                   "abcd"
+    , test (Just 0)     (Desc [FullFuzzy "abcd"] [])                   "ab"
+    , test (Just (-2))  (Desc [FullFuzzy "abcd"] [])                   "cdab"
+    , test (Just 0)     (Desc [FullFuzzy "ab"] [])                     "cdab"
+    , test (Just 4)     (Desc [FullFuzzy "ab", FullFuzzy "cd"] [])     "abcd"
+    , test (Just (-4))  (Desc [] [])                                   "abcd"
+    , test (Just (-5))  (Desc [FullFuzzy "ab"] [])                     "xyz"
+    , test (Just (-2))  (Desc [FullFuzzy "ab", FullFuzzy "cd"] [])     "cdab"
     ] where
         test e d s = (show s ++ show d) ~: e ~=? score d s
 
