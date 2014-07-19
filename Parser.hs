@@ -19,10 +19,14 @@ parseDesc = do
 
 parseEscaped :: Char -> P.Parser String
 parseEscaped c = do
-	s <- nonEscaped
-	return s
+	ss <- P.many1 $ escaped <|> nonEscaped
+	return $ Prelude.concat ss
 	where
-		nonEscaped = P.many1 $ P.notChar c
+		nonEscaped = P.many1 $ P.satisfy $ P.notInClass ['\\', c]
+		escaped = do
+			P.char '\\'
+			c <- P.satisfy $ P.inClass "\\[]"
+			return [c]
 
 parseFuzzy :: P.Parser M.Flow
 parseFuzzy = do
