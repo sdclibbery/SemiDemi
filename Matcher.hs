@@ -1,3 +1,8 @@
+{-|
+Module      : Matcher
+Description : Define a matcher, and score it against a given string
+-}
+
 module Matcher (
     MatchString,
     Score,
@@ -13,14 +18,23 @@ import Data.Char
 import Data.Ord
 import qualified Data.MemoCombinators as Memo
 
+-- |The type of all strings used in this module
 type MatchString = String
+
+-- |The type of a score given to a string after matching it against a matcher
 type Score = Int
 
-data Flow = Fuzzy MatchString | FullFuzzy MatchString | Exact MatchString | Version deriving (Show, Eq)
-data Disallowed = Disallowed MatchString deriving (Show, Eq)
-
+-- |A Matcher Description: how to match against a string
 data Desc = Desc [Flow] [Disallowed] deriving (Show, Eq)
 
+-- |Parts of a Matcher Description that must be matched in a sequence (flow)
+data Flow = Fuzzy MatchString | FullFuzzy MatchString | Exact MatchString | Version deriving (Show, Eq)
+
+-- |Disallowed parts that must not be in the string being matched
+data Disallowed = Disallowed MatchString deriving (Show, Eq)
+
+-- |Match a matcher description against a given string, returning a score.
+-- |The higher the score, the better the match between the matcher and the string
 score :: Desc -> MatchString -> Maybe Score
 score (Desc fs ds) t = do
     d <- if any (\(Disallowed d) -> isInfixOf d t) ds then Nothing else Just 0

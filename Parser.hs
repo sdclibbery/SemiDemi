@@ -1,5 +1,10 @@
 {-# LANGUAGE OverloadedStrings #-}
 
+{-|
+Module      : Parser
+Description : Parse a Matcher description from a markes up input string
+-}
+
 module Parser (
 	parse
 ) where
@@ -8,6 +13,7 @@ import Data.ByteString.Char8
 import qualified Data.Attoparsec.ByteString.Char8 as P
 import Control.Applicative
 
+-- |Given a marked up matcher string, parse it into a Matcher Desc structure.
 parse :: String -> (Either String M.Desc)
 parse t = P.parseOnly parseDesc $ pack t
 
