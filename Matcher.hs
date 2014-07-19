@@ -1,4 +1,6 @@
 module Matcher (
+    MatchString,
+    Score,
     Flow(..),
     Disallowed(..),
     Desc(..),

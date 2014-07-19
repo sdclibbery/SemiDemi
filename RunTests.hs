@@ -1,9 +1,11 @@
 import Test.HUnit
 import qualified MatcherTests
 import qualified ParserTests
+import qualified BestMatchTests
 
 {- TODO:
-* Core system to apply a collection of Matchers to an input string and pick the best
+x Core system to apply a collection of Matchers to an input string and pick the best
+* Documentation
 * Main app to load and parse a suite of matchers from a file, and apply to an input string
 * Tool to generate Descs etc from existing regression data
 * Regression suite
@@ -12,4 +14,5 @@ import qualified ParserTests
 main = runTestTT $ TestList
         [ ParserTests.tests
         , MatcherTests.tests
+        , BestMatchTests.tests
         ]
