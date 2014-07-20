@@ -4,6 +4,7 @@ Description : Find the best match for given string
 -}
 
 module BestMatch (
+	Matcher,
     match
 ) where
 import Data.List
