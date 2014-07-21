@@ -7,28 +7,30 @@ Description : Parse a list of full Matchers: descriptions plus user data
 
 module DemiParser (
 	DemiMatcher,
-	parse
+	DemiParser.parse
 ) where
 import qualified Matcher as M
-import qualified Parser as Parser
+import qualified Parser as P
 import qualified BestMatch as BM
 import Data.ByteString.Char8
-import qualified Data.Attoparsec.ByteString.Char8 as P
-import Control.Applicative
+import Text.Parsec
+import Text.Parsec.String
 
 -- |One demi matcher
 type DemiMatcher = BM.Matcher String
 
 -- |Given an input demi file string, parse it into a list of full demi matchers
 parse :: String -> (Either String [DemiMatcher])
-parse t = P.parseOnly (P.many1 parseMatcher) $ pack t
+parse t = case (Text.Parsec.parse (many1 parseMatcher) "demi" t) of
+	Left err -> Left $ show err
+	Right r -> Right r
 
-parseMatcher :: P.Parser DemiMatcher
+parseMatcher :: Parser DemiMatcher
 parseMatcher = do
-	matcherStr <- P.many1 $ P.notChar '\t'
-	P.char '\t'
-	userdata <- P.many1 $ P.satisfy $ P.notInClass "\r\n"
-	P.many' P.endOfLine
-	return (fromRight' $ Parser.parse matcherStr, userdata)
-		where
-			fromRight' (Right r) = r
+	matcherStr <- many1 $ noneOf "\t"
+	char '\t'
+	userdata <- many1 $ noneOf "\r\n"
+	many $ oneOf "\r\n"
+	case (P.parse matcherStr) of
+		Left err -> fail err
+		Right r -> return (r, userdata)

@@ -6,62 +6,65 @@ Description : Parse a Matcher description from a markes up input string
 -}
 
 module Parser (
-	parse
+	Parser.parse
 ) where
 import qualified Matcher as M
-import Data.ByteString.Char8
-import qualified Data.Attoparsec.ByteString.Char8 as P
-import Control.Applicative
+import Text.Parsec
+import Text.Parsec.String
+import Text.Parsec.Combinator
+import qualified Control.Applicative as Ap
 
 -- |Given a marked up matcher string, parse it into a Matcher Desc structure.
 parse :: String -> (Either String M.Desc)
-parse t = P.parseOnly parseDesc $ pack t
+parse t = case (Text.Parsec.parse parseDesc "matcher" t) of
+	Left err -> Left $ show err
+	Right r -> Right r
 
-parseDesc :: P.Parser M.Desc
+parseDesc :: Parser M.Desc
 parseDesc = do
-	fs <- P.many' (parseVersion <|> parseExact <|> parseFuzzy <|> parseFullFuzzy)
-	ds <- P.manyTill (parseDisallowed <|> fail "Parse error") P.endOfInput
+	fs <- many (parseVersion Ap.<|> parseExact Ap.<|> parseFullFuzzy Ap.<|> parseFuzzy)
+	ds <- manyTill parseDisallowed eof
 	return $ M.Desc fs ds
 
-parseEscaped :: Char -> P.Parser String
+parseEscaped :: Char -> Parser String
 parseEscaped c = do
-	ss <- P.many1 $ escaped <|> nonEscaped
+	ss <- many1 $ escaped Ap.<|> nonEscaped
 	return $ Prelude.concat ss
 	where
-		nonEscaped = P.many1 $ P.satisfy $ P.notInClass ['\\', c]
+		nonEscaped = many1 $ noneOf ['\\', c]
 		escaped = do
-			P.char '\\'
-			c <- P.satisfy $ P.inClass "\\[]"
+			char '\\'
+			c <- oneOf "\\[]"
 			return [c]
 
-parseFuzzy :: P.Parser M.Flow
+parseFuzzy :: Parser M.Flow
 parseFuzzy = do
 	f <- parseEscaped '['
 	return $ M.Fuzzy f
 
-parseFullFuzzy :: P.Parser M.Flow
+parseFullFuzzy :: Parser M.Flow
 parseFullFuzzy = do
-	P.string "[?"
+	try $ string "[?"
 	e <- parseEscaped ']'
-	P.string "]"
+	string "]"
 	return $ M.FullFuzzy e
 
-parseExact :: P.Parser M.Flow
+parseExact :: Parser M.Flow
 parseExact = do
-	P.string "[+"
+	try $ string "[+"
 	e <- parseEscaped ']'
-	P.string "]"
+	string "]"
 	return $ M.Exact e
 
-parseVersion :: P.Parser M.Flow
+parseVersion :: Parser M.Flow
 parseVersion = do
-	P.string "[v]"
+	try $ string "[v]"
 	return M.Version
 
-parseDisallowed :: P.Parser M.Disallowed
+parseDisallowed :: Parser M.Disallowed
 parseDisallowed = do
-	P.string "[-"
+	try $ string "[-"
 	d <- parseEscaped ']'
-	P.string "]"
+	string "]"
 	return $ M.Disallowed d
 
