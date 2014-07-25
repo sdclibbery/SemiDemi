@@ -1,3 +1,13 @@
+import System.Environment
+import DemiParser
+import BestMatch
 
+main = do
+	[target] <- getArgs
+	demi <- readFile "../SemiDemiData/tvs.demi"
+	putStrLn $ process target demi
 
-main = putStrLn "hello!"
+process :: String -> String -> String
+process target demi = case (parse demi) of
+	(Right ms) -> snd $ match target ms
+	(Left err) -> err

@@ -5,8 +5,8 @@ import qualified BestMatchTests
 import qualified DemiParserTests
 
 {- TODO:
-x Good parse errors: line number and sub-parser error message
 * Main app to load/parse a demi file, and apply to an input string, returning the userdata for the matching matcher.
+ x Create temp test .demi file
 * Tool to generate Descs etc from existing regression data
 * Regression suite: automated tests
 -}
