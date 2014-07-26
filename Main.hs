@@ -1,3 +1,8 @@
+{-|
+Module      : Main
+Description : Main SemiDemi app: takes a user agent string, reads a.demi file, and outputs the wurfl id matching the user agent string.
+-}
+
 import System.Environment
 import DemiParser
 import BestMatch
