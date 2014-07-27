@@ -5,8 +5,10 @@ import qualified BestMatchTests
 import qualified DemiParserTests
 
 {- TODO:
-* Regression suite: automated tests
+x Regression suite: automated tests
 * Refine Demi file generation to pass all regression tests...
+ * Finding Exact strings and then marking up version numbers should help...
+? Do we really need better regression testing? EG auto generate version numbers QuickCheck style?
 -}
 
 main = runTestTT $ TestList
