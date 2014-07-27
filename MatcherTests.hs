@@ -34,7 +34,8 @@ testDisallowed = TestLabel "Disallowed" $ TestList
         test e d s = (show s ++ show d) ~: e ~=? score d s
 
 testVersion = TestLabel "Version" $ TestList
-    [ test (Nothing)    (Desc [Version] [])                   "abc"
+    [ test (Just (-2))  (Desc [Version] [])                   "abc"
+    , test (Just 1)     (Desc [Version] [])                   ""
     , test (Just 1)     (Desc [Version] [])                   "1"
     , test (Just 1)     (Desc [Version] [])                   "1.0"
     , test (Just (-2))  (Desc [Version] [])                   "xxx1.0"

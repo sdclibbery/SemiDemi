@@ -23,12 +23,13 @@ main = do
 	putStrLn $ regression demi expected tests
 
 regression :: String -> String -> String -> String
-regression d e t = (foldr (\a b -> a ++ "\n" ++ b) "" $ failures) ++ "\nTotal: " ++ (show $ length ts) ++ "\nFailed: " ++ (show $ length failures)
+regression d e t = case (parse d) of
+	(Right ms) -> (foldr (\a b -> a ++ "\n" ++ b) "" $ failures $ ms) ++ "\nTotal: " ++ (show $ length ts) ++ "\nFailed: " ++ (show $ length $ failures ms)
+	(Left err) -> err
 	where
-		(Right ms) = parse d
 		ts = lines t
 		es = lines e
-		failures = lefts $ map (test ms es) $ zip ts [0..]
+		failures ms = lefts $ map (test ms es) $ zip ts [0..]
 
 test :: [Matcher String] -> [String] -> (String, Int) -> Either String String
 test ms es (t, i) = if e == r then Right "" else Left $ "\nFAIL: " ++ t ++ "\n    EXPECTED: " ++ e ++ "\n         GOT: " ++ r

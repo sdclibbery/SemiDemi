@@ -5,9 +5,14 @@ import qualified BestMatchTests
 import qualified DemiParserTests
 
 {- TODO:
+* Changes to basic matching strategy
+ * Triple points for exact matching
+ * Fuzzy match does nothing
+ * Version allows underscores as well as .'s
 * Refine Demi file generation to pass all regression tests...
- * Try using Version for any numeric bits...
- * Finding Exact strings and then marking up version numbers should help...
+ * DemiMaker should apply specific rules for generating the matcher markup
+  * Eg "Mozilla/xxx" becomes "Mozilla/[v]" etc
+  * Iterate through finding these rules until entire .demi file is marked up well
 ? Do we really need better regression testing? EG auto generate version numbers QuickCheck style?
 -}
 

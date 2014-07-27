@@ -9,7 +9,8 @@ module Matcher (
     Flow(..),
     Disallowed(..),
     Desc(..),
-    score
+    score,
+    isVersion
 ) where
 import Data.List
 import Data.List.Split
@@ -41,6 +42,10 @@ score (Desc fs ds) t = do
     r <- scoreFlow fs t
     return r
 
+-- |Determine whether a Char is part of a version string
+isVersion :: Char -> Bool
+isVersion c = isDigit c || c == '.'
+
 scoreFlow :: [Flow] -> MatchString -> Maybe Score
 scoreFlow fs t = go 0 fs t
     where
@@ -59,13 +64,12 @@ exact needle t = do
     return (matched - dropped, t')
 
 version :: MatchString -> Maybe (Score, MatchString)
-version t = if matched > 0 then Just (1 - dropped, t'') else Nothing
+version t = Just (1 - dropped, t'')
     where
         t' = dropWhile (not . isVersion) t
         t'' = dropWhile isVersion t'
         dropped = length t - length t'
         matched = length t' - length t''
-        isVersion c = isDigit c || c == '.'
 
 fuzzy :: MatchString -> MatchString -> (Score, MatchString)
 fuzzy needle t = go 0 needle t
