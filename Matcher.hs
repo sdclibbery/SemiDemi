@@ -54,7 +54,7 @@ scoreFlow fs t = go 0 fs t
             (s', t') <- case f of
                 (Exact e) -> exact e t
                 Version -> version t
-                (Fuzzy f) -> return $ fuzzy f t
+                (Fuzzy f) -> return (0, t)
                 (FullFuzzy f) -> return $ fullFuzzy f t
             go (s + s') fs t'
 
@@ -70,13 +70,6 @@ version t = Just (1 - dropped, t'')
         t'' = dropWhile isVersion t'
         dropped = length t - length t'
         matched = length t' - length t''
-
-fuzzy :: MatchString -> MatchString -> (Score, MatchString)
-fuzzy needle t = go 0 needle t
-    where
-        go s [] t = (s, t)
-        go s n [] = (s - length n, "")
-        go s (n:ns) (t:ts) = if n == t then go (s+1) ns ts else go (s-1) (n:ns) ts -- All needle chars must be matched.
 
 fullFuzzy :: MatchString -> MatchString -> (Score, MatchString)
 fullFuzzy needle t = (s, tr ++ remainder)

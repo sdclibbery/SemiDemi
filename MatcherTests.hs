@@ -45,17 +45,9 @@ testVersion = TestLabel "Version" $ TestList
         test e d s = (show s ++ show d) ~: e ~=? score d s
 
 testFuzzy = TestLabel "Fuzzy" $ TestList
-    [ test (Just 4)     (Desc [Fuzzy "abcd"] [])                   "abcd"
-    , test (Just 0)     (Desc [Fuzzy "ab"] [])                     "abcd"
-    , test (Just (-1))  (Desc [Fuzzy "ab"] [])                     "axxxb"
-    , test (Just (-2))  (Desc [Fuzzy "abef"] [])                   "abcd"
-    , test (Just 0)     (Desc [Fuzzy "abcd"] [])                   "ab"
-    , test (Just (-2))  (Desc [Fuzzy "abcd"] [])                   "cdab"
-    , test (Just 0)     (Desc [Fuzzy "ab"] [])                     "cdab"
-    , test (Just 4)     (Desc [Fuzzy "ab", Fuzzy "cd"] [])         "abcd"
-    , test (Just (-4))  (Desc [] [])                               "abcd"
-    , test (Just (-5))  (Desc [Fuzzy "ab"] [])                     "xyz"
-    , test (Just (-2))  (Desc [Fuzzy "ab", Fuzzy "cd"] [])         "cdab"
+    [ test (Just (-4))     (Desc [Fuzzy "abcd"] [])                 "abcd"
+    , test (Just (-4))     (Desc [Fuzzy ""] [])                     "abcd"
+    , test (Just (-4))     (Desc [Fuzzy "12"] [])                   "abcd"
     ] where
         test e d s = (show s ++ show d) ~: e ~=? score d s
 
@@ -75,11 +67,11 @@ testFullFuzzy = TestLabel "FullFuzzy" $ TestList
         test e d s = (show s ++ show d) ~: e ~=? score d s
 
 testExamples = TestLabel "Examples" $ TestList
-    [ test (Just 166) desc "Mozilla/5.0(compatible; U; InfiNet 0.1; Diga) AppleWebKit/420+ (KHTML, like Gecko)(avdn/Panasonic.bd.pro4r.2014)"
-    , test (Just 166) desc "Mozilla/1234(compatible; U; InfiNet 1.2.3.4; Diga) AppleWebKit/5678+ (KHTML, like Gecko)(avdn/Panasonic.bd.pro4r.2014)"
-    , test Nothing    desc "Mozilla/5.0(compatible; U; InfiNet 0.1; Diga) AppleWebKit/420+ (KHTML, like Gecko)(avdn/Panasonic.bd.pro5r.2014)"
-    , test (Just 165) desc "Mozilla/5.0(!compatible; U; InfiNet 0.1; Diga) AppleWebKit/420+ (KHTML, like Gecko)(avdn/Panasonic.bd.pro4r.2014)"
-    , test (Just 149) desc "Mozilla/5.0(compatible; UX; InfiNet 0.1; Diga; woo) AppleWebKit/420++ (KHTML, like Gecko yeah)(avdn/Panasonic.bd.pro4r.2014) blah"
+    [ test (Just 20) desc "Mozilla/5.0(compatible; U; InfiNet 0.1; Diga) AppleWebKit/420+ (KHTML, like Gecko)(avdn/Panasonic.bd.pro4r.2014)"
+    , test (Just 20) desc "Mozilla/1234(compatible; U; InfiNet 1.2.3.4; Diga) AppleWebKit/5678+ (KHTML, like Gecko)(avdn/Panasonic.bd.pro4r.2014)"
+    , test Nothing   desc "Mozilla/5.0(compatible; U; InfiNet 0.1; Diga) AppleWebKit/420+ (KHTML, like Gecko)(avdn/Panasonic.bd.pro5r.2014)"
+    , test (Just 19) desc "Mozilla/5.0(!compatible; U; InfiNet 0.1; Diga) AppleWebKit/420+ (KHTML, like Gecko)(avdn/Panasonic.bd.pro4r.2014)"
+    , test (Just 3)  desc "Mozilla/5.0(compatible; UX; InfiNet 0.1; Diga; woo) AppleWebKit/420++ (KHTML, like Gecko yeah)(avdn/Panasonic.bd.pro4r.2014) blah"
     ] where
         test e d s = (show s ++ show d) ~: e ~=? score d s
         desc = (Desc [ Fuzzy "Mozilla/"

@@ -6,8 +6,7 @@ import qualified DemiParserTests
 
 {- TODO:
 * Changes to basic matching strategy
- * Triple points for exact matching
- * Fuzzy match does nothing
+ x Fuzzy match does nothing
  * Version allows underscores as well as .'s
 * Refine Demi file generation to pass all regression tests...
  * DemiMaker should apply specific rules for generating the matcher markup
