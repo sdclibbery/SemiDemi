@@ -38,6 +38,7 @@ testVersion = TestLabel "Version" $ TestList
     , test (Just 1)     (Desc [Version] [])                   ""
     , test (Just 1)     (Desc [Version] [])                   "1"
     , test (Just 1)     (Desc [Version] [])                   "1.0"
+    , test (Just 1)     (Desc [Version] [])                   "1_0"
     , test (Just (-2))  (Desc [Version] [])                   "xxx1.0"
     , test (Just (-2))  (Desc [Version] [])                   "1.0xxx"
     , test (Just 1)     (Desc [Version] [])                   "0.0.0"

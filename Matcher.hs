@@ -44,7 +44,7 @@ score (Desc fs ds) t = do
 
 -- |Determine whether a Char is part of a version string
 isVersion :: Char -> Bool
-isVersion c = isDigit c || c == '.'
+isVersion c = isDigit c || c == '.' || c == '_'
 
 scoreFlow :: [Flow] -> MatchString -> Maybe Score
 scoreFlow fs t = go 0 fs t

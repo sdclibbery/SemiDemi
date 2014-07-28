@@ -5,9 +5,8 @@ import qualified BestMatchTests
 import qualified DemiParserTests
 
 {- TODO:
-* Changes to basic matching strategy
- x Fuzzy match does nothing
- * Version allows underscores as well as .'s
+x Changes to basic matching strategy
+ x Version allows underscores as well as .'s
 * Refine Demi file generation to pass all regression tests...
  * DemiMaker should apply specific rules for generating the matcher markup
   * Iterate through finding these rules until entire .demi file is marked up well
