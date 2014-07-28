@@ -36,15 +36,38 @@ instance FromJSON Case where
     parseJSON _          = mzero
 
 markup :: String -> String -> String
-markup wid = id -- markupExact wid . markupVersions
-
-markupExact :: String -> String -> String
-markupExact src s = foldr replace s parts
+markup wid s = foldr replace s replacements
 	where
-		parts = filter (\p -> length p > 1) $ splitOneOf "_-" src
-		replace r s = subRegex (mkRegexWithOpts ("(" ++ r ++ ")") False False) s "[+\\1]"
-
-markupVersions :: String -> String
-markupVersions s = subRegex r s "[v]"
-	where
-		r = mkRegex "[0-9]+(\\.[0-9]+)+"
+		replace r s = subRegex (mkRegexWithOpts (fst r) False False) s (snd r)
+		replacements = [
+				  version "Opera/"
+				, version "Presto/"
+				, exact "3view.stb.2010"
+				, version "Mozilla/"
+				, version "AppleWebKit/"
+				, version "kazoku/"
+				, version "Safari/"
+				, exact "ADB"
+				, exact "ATSCE"
+				, version "ATSCE/"
+				, version "NETTV/"
+				, version "HbbTV/"
+				, exact "BANGOLUFSEN;A3"
+				, exact "BANGOLUFSEN; A3TEST"
+				, exact "BBC-Forge-URL-Monitor-Twisted"
+				, version "rv:"
+				, version "HTML/"
+				, version "OreganMediaBrowser/"
+				, version "Gecko/"
+				, version "Firefox/"
+				, exact "bt_cardinal.stb.2011"
+				, exact "BT-Cardinal-G2512/4.30.1"
+				, exact "BT-Cardinal-G2512/4.30.2"
+				, exact "BT-Cardinal-G2256/4.30.2"
+				, exact "BT-Cardinal-G21024/4.30.2"
+				, exact "BT-Cardinal-G2512/4.30.3"
+				, exact "BT-Cardinal-G2256/4.30.3"
+				, exact "BT-Cardinal-G21024/4.30.3"
+			]
+		version s = ("(" ++ s ++ ")[0-9.]+", "\\1[v]")
+		exact s = ("(" ++ s ++ ")", "[+\\1]")

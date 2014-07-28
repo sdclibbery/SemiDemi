@@ -5,13 +5,12 @@ import qualified BestMatchTests
 import qualified DemiParserTests
 
 {- TODO:
-x Changes to basic matching strategy
- x Version allows underscores as well as .'s
 * Refine Demi file generation to pass all regression tests...
- * DemiMaker should apply specific rules for generating the matcher markup
-  * Iterate through finding these rules until entire .demi file is marked up well
-  * Have a long list of very specific things to markup as Exact
-  * Eg "Mozilla/xxx" becomes "Mozilla/[v]" etc
+ x DemiMaker should apply specific rules for generating the matcher markup
+  x Iterate through finding these rules until entire .demi file is marked up well
+  x Have a long list of very specific things to markup as Exact
+  x And things to markup as version: "Mozilla/xxx" becomes "Mozilla/[v]" etc
+ * NEXT: line 15
 ? Do we really need better regression testing? EG auto generate version numbers QuickCheck style?
 -}
 
