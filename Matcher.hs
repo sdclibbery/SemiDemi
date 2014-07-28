@@ -61,7 +61,7 @@ scoreFlow fs t = go 0 fs t
 exact :: MatchString -> MatchString -> Maybe (Score, MatchString)
 exact needle t = do
     (dropped, matched, t') <- findString needle t
-    return (matched - dropped, t')
+    return (matched*3 - dropped, t') -- Triple points for exact matching
 
 version :: MatchString -> Maybe (Score, MatchString)
 version t = Just (1 - dropped, t'')
