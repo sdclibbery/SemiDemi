@@ -22,6 +22,7 @@ main = do
 	expected <- readFile "../SemiDemiData/testdata/testdata.json"
 	putStrLn $ regression demi expected tests
 
+
 regression :: String -> String -> String -> String
 regression d e t = case (parse d) of
 	(Right ms) -> (foldr (\a b -> a ++ "\n" ++ b) "" $ failures $ ms) ++ "\nTotal: " ++ (show $ length ts) ++ "\nFailed: " ++ (show $ length $ failures ms)
@@ -32,9 +33,10 @@ regression d e t = case (parse d) of
 		failures ms = lefts $ map (test ms es) $ zip ts [0..]
 
 test :: [Matcher String] -> [String] -> (String, Int) -> Either String String
-test ms es (t, i) = if e == r then Right "" else Left $ "\nFAIL: " ++ t ++ "\n    EXPECTED: " ++ e ++ "\n         GOT: " ++ r
+test ms es (t, i) = do
+	m <- match t ms
+	if e == snd m then Right "" else Left $ "\nFAIL: " ++ t ++ "\n    EXPECTED: " ++ e ++ "\n         GOT: " ++ (snd m)
 	where
-		r = snd $ match t ms
 		e = parseJson $ es !! i
 
 data Case = Case { wurflId::String } deriving (Eq, Ord, Show)

@@ -10,9 +10,10 @@ import BestMatch
 main = do
 	[target] <- getArgs
 	demi <- readFile "../SemiDemiData/tvs.demi"
-	putStrLn $ process target demi
+	putStrLn $ either show show $ process target demi
 
-process :: String -> String -> String
-process target demi = case (parse demi) of
-	(Right ms) -> snd $ match target ms
-	(Left err) -> err
+process :: String -> String -> Either String String
+process target demi = do
+	ms <- parse demi
+	m <- match target ms
+	return $ snd m

@@ -18,8 +18,11 @@ import qualified Matcher as M
 type Matcher a = (M.Desc, a)
 
 -- |Match a list of Matchers, returning the one that scored highest
-match :: M.MatchString -> [Matcher a] -> Matcher a
-match s = snd . pickBest . getScores
+match :: Show a => M.MatchString -> [Matcher a] -> Either String (Matcher a)
+match s = result . filter (isJust . fst) . getScores
 	where
 		getScores = map (\m -> (M.score (fst m) s, m))
-		pickBest = maximumBy (comparing fst) . filter (isJust . fst)
+		result [] = Left "No matches"
+		result (m:[]) = Right $ snd m
+		result ms = Left $ "Multiple matches: " ++ (show $ map snd ms)
+
