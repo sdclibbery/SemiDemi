@@ -119,7 +119,7 @@ markup wid s = foldr replace s replacements
 				, exact "LG.Media-2010"
 				, version "BR."
 				, exact "LG.Media-2010"
-				, exact "Media/HR939"
+				, exact "Media/HR[0-9]{3}"
 				, exact "avdn/LG"
 				, exact "Media/B[A-Z][0-9]{3,4}[A-Z]{0,2};"
 				, exact "BLURAY 2013"
