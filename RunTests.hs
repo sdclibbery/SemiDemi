@@ -5,12 +5,13 @@ import qualified BestMatchTests
 import qualified DemiParserTests
 
 {- TODO:
-* Try having BestMatch return error if more than one match
- * Then disable all fuzzy/version matching since its now irrelevant
- * Right at end, can then tidy all this up and simplify the whole thing massively if this works
+x Try having BestMatch return error if more than one match
+x Then disable all fuzzy/version matching since its now irrelevant
+* When parsing, ignore Fuzzy, FullFuzzy and Version altogether
+* Its now a parse time error to have a matcher with no Exact or Disallowed in it...
 * Refine Demi file generation to pass all regression tests...
  * NEXT: line 78...
-? Do we really need better regression testing? EG auto generate version numbers QuickCheck style?
+* Tidy Matcher up: remove unused stuff...
 -}
 
 main = runTestTT $ TestList

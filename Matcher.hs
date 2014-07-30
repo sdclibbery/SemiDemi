@@ -53,9 +53,9 @@ scoreFlow fs t = go 0 fs t
         go s (f:fs) t = do
             (s', t') <- case f of
                 (Exact e) -> exact e t
-                Version -> version t
+                Version -> return (0, t)
                 (Fuzzy f) -> return (0, t)
-                (FullFuzzy f) -> return $ fullFuzzy f t
+                (FullFuzzy f) -> return (0, t)
             go (s + s') fs t'
 
 exact :: MatchString -> MatchString -> Maybe (Score, MatchString)
