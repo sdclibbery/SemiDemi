@@ -17,4 +17,3 @@ testBlah = TestLabel "Blah" $ TestList
     ] where
         test e ms s = (show s ++ show ms) ~: e ~=? match s ms
         ex s = (M.Desc [M.Exact s] [], s)
-        fz s = (M.Desc [M.Fuzzy s] [], s)
