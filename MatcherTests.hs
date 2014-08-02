@@ -5,10 +5,19 @@ import Test.HUnit
 import Matcher
 
 tests = TestLabel "Matcher" $ TestList
-    [ testExact
+    [ testEmpty
+    , testExact
     , testDisallowed
     , testExamples
     ]
+
+testEmpty = TestLabel "Empty" $ TestList
+    [ test True       (Desc [] [])
+    , test False       (Desc [Exact "any"] [])
+    , test False       (Desc [Exact "any"] [Disallowed "atall"])
+    , test False       (Desc [] [Disallowed "atall"])
+    ] where
+        test e d = (show d) ~: e ~=? empty d
 
 testExact = TestLabel "Exact" $ TestList
     [ test True     (Desc [Exact "abc"] [])                   "abc"

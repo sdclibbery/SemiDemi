@@ -8,6 +8,7 @@ module Matcher (
     Exact(..),
     Disallowed(..),
     Desc(..),
+    empty,
     matches
 ) where
 import Data.List
@@ -23,6 +24,10 @@ data Exact = Exact MatchString deriving (Show, Eq)
 
 -- |Disallowed parts that must not be in the string being matched
 data Disallowed = Disallowed MatchString deriving (Show, Eq)
+
+-- |Test whether a matcher is empty (contains no match elements)
+empty :: Desc -> Bool
+empty (Desc es ds) = null es && null ds
 
 -- |See if a given matcher matches a given target string
 matches :: Desc -> MatchString -> Bool
