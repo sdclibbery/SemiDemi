@@ -18,7 +18,7 @@ import qualified Control.Applicative as Ap
 parse :: String -> (Either String M.Desc)
 parse t = case (Text.Parsec.parse parseDesc "matcher" t) of
 	Left err -> Left $ show err
-	Right r -> if M.empty r then Left $ "Empty matcher: " ++ t else Right r
+	Right r -> return r
 
 parseDesc :: Parser M.Desc
 parseDesc = do
