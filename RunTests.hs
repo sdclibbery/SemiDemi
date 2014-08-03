@@ -5,7 +5,9 @@ import qualified BestMatchTests
 import qualified DemiParserTests
 
 {- TODO:
-* If multiple results are unavoidable, do a single editDistance on the whole ua string for just the matched results...
+x Disable the DemiParser duplicate validation
+* Remove 'dubious' DemiMaker matches
+* In BestMatch, if multiple matches occur, do a single editDistance to find the best
 -}
 
 main = runTestTT $ TestList
