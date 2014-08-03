@@ -5,8 +5,8 @@ import qualified BestMatchTests
 import qualified DemiParserTests
 
 {- TODO:
-x Disable the DemiParser duplicate validation
-* Remove 'dubious' DemiMaker matches
+x Remove 'dubious' DemiMaker matches
+* Remove 'empty' check in parser
 * In BestMatch, if multiple matches occur, do a single editDistance to find the best
 -}
 
