@@ -12,9 +12,11 @@ module DemiParser (
 import qualified Matcher as M
 import qualified Parser as P
 import qualified BestMatch as BM
-import Data.ByteString.Char8
+import qualified Data.ByteString.Char8 as BS
 import Text.Parsec
 import Text.Parsec.String
+import qualified Data.List as L
+import qualified Data.Either as E
 
 -- |One demi matcher
 type DemiMatcher = BM.Matcher String
@@ -23,7 +25,16 @@ type DemiMatcher = BM.Matcher String
 parse :: String -> (Either String [DemiMatcher])
 parse t = case (Text.Parsec.parse (many1 parseMatcher) "demi" t) of
 	Left err -> Left $ show err
-	Right r -> Right r
+	Right ms -> do
+		validate ms
+
+validate :: [DemiMatcher] -> (Either String [DemiMatcher])
+validate ms = if not $ null $ duplicates then Left $ "Duplicate matchers: " ++ (show duplicates) else Right ms
+  where
+  	tailPairs ms = zip (tail $ L.tails ms) (repeat ms)
+  	duplicates = concatMap duplicatesAtPos $ tailPairs ms
+  	duplicatesAtPos = E.lefts . map isDuplicate . uncurry zip
+  	isDuplicate ((lm, ls), (rm, rs)) = if lm /= rm then Right True else Left (rs, ls)
 
 parseMatcher :: Parser DemiMatcher
 parseMatcher = do
