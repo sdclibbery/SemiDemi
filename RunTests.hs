@@ -5,13 +5,19 @@ import qualified BestMatchTests
 import qualified DemiParserTests
 
 {- TODO:
-? Will we need to have version markup? How would this play with the single editDistance calculation?
- ? Can we use the version markup in normalisation?
-* Matcher must keep a copy of the original string
-* In BestMatch, if multiple matches occur, do a single editDistance to find the best
-* Must have a test with two matchers differing by a single space, then match against a string differing by several version chars
-? Modify editDistance to score digit <-> digit differences less than other differences
- ? Or 'normalise' by removing versions from both strings before editDistance matching...
+* Need to test drive this now
+ * Must have a test with two matchers differing by a single space, then match against a string differing by several version chars
+ * Tests for other awkward cases too
+* Suggest:
+ * Do full markup, with exact, disallowed, version and fuzzy-default
+ * Version should markup the surrounding context as well
+ * Then split matching in two:
+  * First apply Exact and Disallowed to get shortlist
+  * If theres only one, success!
+  * If more than one, score
+   * First, normalise by removing versions using the context info
+   * Then do a full editDistance on the full strings to get the score...
+ * Matcher must keep a copy of the original string
 -}
 
 main = runTestTT $ TestList
