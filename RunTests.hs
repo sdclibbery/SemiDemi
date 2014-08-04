@@ -5,9 +5,6 @@ import qualified BestMatchTests
 import qualified DemiParserTests
 
 {- TODO:
-* Need to test drive this now
- * Must have a test with two matchers differing by a single space, then match against a string differing by several version chars
- * Tests for other awkward cases too
 * Suggest:
  * Do full markup, with exact, disallowed, version and fuzzy-default
  * Version should markup the surrounding context as well
@@ -17,7 +14,21 @@ import qualified DemiParserTests
   * If more than one, score
    * First, normalise by removing versions using the context info
    * Then do a full editDistance on the full strings to get the score...
+
+* Disambiguate multiple matches
+ * Test: same Exact matchers, but correct one matches because of string compare
  * Matcher must keep a copy of the original string
+ * Matcher.hs has score function, just does editDistance for now
+ * BestMatch sends multiple matches back for scoring and then picks the best
+* Try regression now...
+* Support version normalisation
+ * Must have a test with two matchers differing by a single space, then match against a string differing by several version chars
+ * Matcher data for version
+ * Parse version, including context
+ * Matcher handles version normalisation before scoring
+* Try regression again
+ * DemiMaker adds version markup
+
 -}
 
 main = runTestTT $ TestList
