@@ -9,9 +9,11 @@ module Matcher (
     Disallowed(..),
     Desc(..),
     empty,
-    matches
+    matches,
+    score
 ) where
 import Data.List
+import Data.Array
 
 -- |The type of all strings used in this module
 type MatchString = String
@@ -35,3 +37,27 @@ matches (Desc fs ds) t = disallowed && exact
     where
         disallowed = if any (\(Disallowed d) -> isInfixOf d t) ds then False else True
         exact = if all (\(Exact e) -> isInfixOf e t) fs then True else False
+
+-- |Score a given target string against a matcher. The higher the score, the closer the match.
+score :: Desc -> MatchString -> Int
+score (Desc fs _) t = length t - editDistance full t
+  where
+    full = foldl' (\s f -> s ++ toString f) "" fs
+    toString (Fuzzy s) = s
+    toString (Exact s) = s
+
+editDistance :: (Eq a) => [a] -> [a] -> Int
+editDistance xs ys = levMemo ! (n, m)
+  where
+    levMemo = array ((0,0),(n,m)) [((i,j),lev i j) | i <- [0..n], j <- [0..m]]
+    n = length xs
+    m = length ys
+    xa = listArray (1, n) xs
+    ya = listArray (1, m) ys
+    lev 0 v = v
+    lev u 0 = u
+    lev u v
+      | xa ! u == ya ! v = levMemo ! (u-1, v-1)
+      | otherwise        = 1 + minimum [levMemo ! (u, v-1),
+                                        levMemo ! (u-1, v),
+                                        levMemo ! (u-1, v-1)] 

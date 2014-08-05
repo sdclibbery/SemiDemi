@@ -16,9 +16,7 @@ import qualified DemiParserTests
    * Then do a full editDistance on the full strings to get the score...
 
 * Disambiguate multiple matches
- x Matcher must keep a copy of the original string, set up by Parser
-  ?? Keep entire string, or parse sections like we used to? Possibility of normalisation suggests keeping sections and recreating an appropriate string as required.
- * Matcher.hs has score function, just does editDistance for now
+ x Matcher.hs has score function, just does editDistance for now
  * BestMatch sends multiple matches back for scoring and then picks the best
   * Test: same Exact matchers, but correct one matches because of string compare
 * Try regression now...
