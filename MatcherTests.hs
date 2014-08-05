@@ -6,9 +6,9 @@ import Matcher
 
 tests = TestLabel "Matcher" $ TestList
     [ testEmpty
-    , testExact
-    , testDisallowed
-    , testExamples
+    , testMatchesExact
+    , testMatchesDisallowed
+    , testMatchesExamples
     ]
 
 testEmpty = TestLabel "Empty" $ TestList
@@ -19,7 +19,7 @@ testEmpty = TestLabel "Empty" $ TestList
     ] where
         test e d = (show d) ~: e ~=? empty d
 
-testExact = TestLabel "Exact" $ TestList
+testMatchesExact = TestLabel "MatchesExact" $ TestList
     [ test True     (Desc [Exact "abc"] [])                   "abc"
     , test False    (Desc [Exact "abc"] [])                   "abd"
     , test True     (Desc [Exact "ab"] [])                    "abc"
@@ -32,14 +32,14 @@ testExact = TestLabel "Exact" $ TestList
     ] where
         test e d s = (show s ++ show d) ~: e ~=? matches d s
 
-testDisallowed = TestLabel "Disallowed" $ TestList
+testMatchesDisallowed = TestLabel "MatchesDisallowed" $ TestList
     [ test True       (Desc [] [Disallowed "d"])                   "abc"
     , test False      (Desc [] [Disallowed "a"])                   "abc"
     , test False      (Desc [] [Disallowed "d", Disallowed "a"])   "abc"
     ] where
         test e d s = (show s ++ show d) ~: e ~=? matches d s
 
-testExamples = TestLabel "Examples" $ TestList
+testMatchesExamples = TestLabel "MatchesExamples" $ TestList
     [ test True     desc "Mozilla/5.0(compatible; U; InfiNet 0.1; Diga) AppleWebKit/420+ (KHTML, like Gecko)(avdn/Panasonic.bd.pro4r.2014)"
     , test True     desc "Mozilla/1234(compatible; U; InfiNet 1.2.3.4; Diga) AppleWebKit/5678+ (KHTML, like Gecko)(avdn/Panasonic.bd.pro4r.2014)"
     , test False    desc "Mozilla/5.0(compatible; U; InfiNet 0.1; Diga) AppleWebKit/420+ (KHTML, like Gecko)(avdn/Panasonic.bd.pro5r.2014)"
