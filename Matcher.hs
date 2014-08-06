@@ -36,7 +36,9 @@ matches :: Desc -> MatchString -> Bool
 matches (Desc fs ds) t = disallowed && exact
     where
         disallowed = if any (\(Disallowed d) -> isInfixOf d t) ds then False else True
-        exact = if all (\(Exact e) -> isInfixOf e t) fs then True else False
+        exact = if all matchExact fs then True else False
+        matchExact (Exact e) = isInfixOf e t
+        matchExact _ = True
 
 -- |Score a given target string against a matcher. The higher the score, the closer the match.
 score :: Desc -> MatchString -> Int

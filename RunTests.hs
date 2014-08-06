@@ -15,10 +15,9 @@ import qualified DemiParserTests
    * First, normalise by removing versions using the context info
    * Then do a full editDistance on the full strings to get the score...
 
-* Disambiguate multiple matches
- x Matcher.hs has score function, just does editDistance for now
- * BestMatch sends multiple matches back for scoring and then picks the best
-  * Test: same Exact matchers, but correct one matches because of string compare
+x Disambiguate multiple matches
+ x BestMatch sends multiple matches back for scoring and then picks the best
+  x Test: same Exact matchers, but correct one matches because of string compare
 * Try regression now...
 * Support version normalisation
  * Must have a test with two matchers differing by a single space, then match against a string differing by several version chars

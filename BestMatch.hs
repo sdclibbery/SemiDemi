@@ -19,10 +19,11 @@ type Matcher a = (M.Desc, a)
 
 -- |Match a list of Matchers, returning the one that scored highest
 match :: Show a => M.MatchString -> [Matcher a] -> Either String (Matcher a)
-match s = result . filter fst . match
+match s = result . filter fst . map match
 	where
-		match = map (\m -> (M.matches (fst m) s, m))
-		result [] = Left "No matches"
+		match m = (M.matches (fst m) s, m)
+		result [] = Left $ "No matches for: " ++ s 
 		result (m:[]) = Right $ snd m
-		result ms = Left $ "Multiple matches: " ++ (show $ map snd ms)
+		result ms = Right $ snd $ head $ sortBy (flip $ comparing fst) $ map score ms
+		score (_, m) = (M.score (fst m) s, m)
 
