@@ -13,7 +13,8 @@ tests = TestLabel "Matcher" $ TestList
     ]
 
 testEmpty = TestLabel "Empty" $ TestList
-    [ test True       (Desc [] [])
+    [ test True        (Desc [] [])
+    , test True        (Desc [Fuzzy "any"] [])
     , test False       (Desc [Exact "any"] [])
     , test False       (Desc [Exact "any"] [Disallowed "atall"])
     , test False       (Desc [] [Disallowed "atall"])
@@ -51,11 +52,11 @@ testMatchesExamples = TestLabel "MatchesExamples" $ TestList
         desc = Desc [Exact "Panasonic.bd.pro4r.2014"] [Disallowed "Opera"]
 
 testScore = TestLabel "Score" $ TestList
-    [ test 0     (Desc [] [])                                  "abc"
-    , test 3     (Desc [Fuzzy "abc"] [])                       "abc"
-    , test 3     (Desc [Fuzzy "abc"] [Disallowed "def"])       "abc"
-    , test 3     (Desc [Fuzzy "ab", Fuzzy "c"] [])             "abc"
-    , test 3     (Desc [Fuzzy "a", Exact "b", Fuzzy "c"] [])   "abc"
+    [ test 3     (Desc [] [])                                  "abc"
+    , test 0     (Desc [Fuzzy "abc"] [])                       "abc"
+    , test 0     (Desc [Fuzzy "abc"] [Disallowed "def"])       "abc"
+    , test 0     (Desc [Fuzzy "ab", Fuzzy "c"] [])             "abc"
+    , test 0     (Desc [Fuzzy "a", Exact "b", Fuzzy "c"] [])   "abc"
     ] where
         test e d s = (show s ++ show d) ~: e ~=? score d s
 

@@ -15,10 +15,11 @@ import qualified DemiParserTests
    * First, normalise by removing versions using the context info
    * Then do a full editDistance on the full strings to get the score...
 
-x Disambiguate multiple matches
- x BestMatch sends multiple matches back for scoring and then picks the best
-  x Test: same Exact matchers, but correct one matches because of string compare
-* Try regression now...
+
+x Try regression now...
+ x Shorter matchers seem to always win!
+ x Also, too slow..?
+* Remove generic smarttv matcher from .demi file, but use it as the default result when nothing else matches
 * Support version normalisation
  * Must have a test with two matchers differing by a single space, then match against a string differing by several version chars
  * Matcher data for version

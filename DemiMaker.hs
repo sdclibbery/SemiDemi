@@ -40,11 +40,18 @@ markup wid s = foldr replace s replacements
 	where
 		replace r s = subRegex (mkRegexWithOpts (fst r) False False) s (snd r)
 		replacements = [
-				  exact "3view.stb.2010"
+				-- Matchers for entire UAs
+				  exact "DO_NOT_MATCH_GENERIC_SMARTTV"
+				, exact "Opera/9.99 \\(Linux_SDK; test\\)Linux_SDK/1.0 Version/9.99"
+				, exact "Opera/10.60 \\(Linux armv6l ; U; CE-HTML/1.0 NETTV/3.0.1;; en\\) Presto/2.6.33 Version/10.60"
+				, exact "Opera/9.80 \\(Linux armv6l ; U; HbbTV/1.1.1 \\(; ; ; ; ; \\) CE-HTML/1.0 NETTV/3.2.1; en\\) Presto/2.6.33 Version/10.60"
+				-- End Matchers for entire UAs
+				, exact "3view.stb.2010"
 				, exact "ADB"
 				, exact "ATSCE"
-				, exact "BANGOLUFSEN;A3"
-				, exact "BANGOLUFSEN; A3TEST"
+				, exact "BANGOLUFSEN"
+				, exact "A3;"
+				, exact "A3TEST;"
 				, exact "BBC-Forge-URL-Monitor-Twisted"
 				, exact "bt_cardinal.stb.2011"
 				, exact "BT-Cardinal-G2512/4.30.1"
@@ -118,7 +125,7 @@ markup wid s = foldr replace s replacements
 				, exact "SAGEMCOM"
 				, exact "HDSP"
 				, exact "PHILIPS-AVM-2012"
-				, exact "Philips, BDP[0-9]{4}[A-Z]?"
+				, exact "Philips, BDP[0-9]{4}[A-Z]?,"
 				, exact "Philips, HMP7100"
 				, exact "Philips; ; ; PHILIPSTV;"
 				, exact "PHILIPS_OLS_2010"
@@ -127,6 +134,7 @@ markup wid s = foldr replace s replacements
 				, exact "Philips;MT55[0-9]{2};"
 				, exact "Pure-VL61770"
 				, exact "DVP-[0-9]{4}EU"
+				, exact "PHILIPSTV/"
 				, exact "RSIW98"
 				, exact "RTI95"
 				, exact "SMART-TV"

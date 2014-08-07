@@ -7,6 +7,7 @@ import Parser
 
 tests = TestLabel "Parser" $ TestList
     [ testExact
+    , testEmpty
     , testDisallowed
     , testExample
     ]
@@ -17,6 +18,11 @@ testExact = TestLabel "Exact" $ TestList
     , test (Left "\"matcher\" (line 1, column 6):\nunexpected end of input\nexpecting \"\\\\\" or \"]\"")   "[+abc"
     , test (Right $ Desc [Fuzzy "123", Exact "abc", Fuzzy "456"] [])                                        "123[+abc]456"
     , test (Right $ Desc [Exact "abc", Exact "123"] [])                                                     "[+abc][+123]"
+    ] where
+        test e s = (show s) ~: e ~=? parse s
+
+testEmpty = TestLabel "Empty" $ TestList
+    [ test (Left $ "Empty matcher: abc")                                                              "abc"
     ] where
         test e s = (show s) ~: e ~=? parse s
 

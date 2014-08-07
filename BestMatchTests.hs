@@ -26,8 +26,9 @@ testSingleResult = TestLabel "SingleResult" $ TestList
         ex s = (M.Desc [M.Exact s] [], s)
 
 testMultipleResult = TestLabel "MultipleResult" $ TestList
-    [ test   (Right $ m "abc")   [m "abc", m "def"]                      "abcWooHoo"
-    , test   (Right $ m "def")   [m "abc", m "def"]                      "defWooHoo"
+    [ test   (Right $ m "abc")       [m "abc", m "def"]                      "abcWooHoo"
+    , test   (Right $ m "def")       [m "abc", m "def"]                      "defWooHoo"
+    , test   (Right $ m "defdefdef") [m "a", m "defdefdef"]                  "defdefdefWooHoo"
     ] where
         test e ms s = (show s ++ show ms) ~: e ~=? match s ms
         m s = (M.Desc [M.Fuzzy s, M.Exact "WooHoo"] [], s)

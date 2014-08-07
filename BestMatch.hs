@@ -24,6 +24,6 @@ match s = result . filter fst . map match
 		match m = (M.matches (fst m) s, m)
 		result [] = Left $ "No matches for: " ++ s 
 		result (m:[]) = Right $ snd m
-		result ms = Right $ snd $ head $ sortBy (flip $ comparing fst) $ map score ms
+		result ms = Right $ snd $ head $ sortBy (comparing fst) $ map score ms
 		score (_, m) = (M.score (fst m) s, m)
 

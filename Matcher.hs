@@ -29,7 +29,10 @@ data Disallowed = Disallowed MatchString deriving (Show, Eq)
 
 -- |Test whether a matcher is empty (contains no match elements)
 empty :: Desc -> Bool
-empty (Desc es ds) = null es && null ds
+empty (Desc es ds) = (null $ filter (not.isFuzzy) es) && null ds
+    where
+        isFuzzy (Fuzzy _) = True
+        isFuzzy _ = False
 
 -- |See if a given matcher matches a given target string
 matches :: Desc -> MatchString -> Bool
@@ -40,9 +43,9 @@ matches (Desc fs ds) t = disallowed && exact
         matchExact (Exact e) = isInfixOf e t
         matchExact _ = True
 
--- |Score a given target string against a matcher. The higher the score, the closer the match.
+-- |Score a given target string against a matcher. The lower the score, the closer the match.
 score :: Desc -> MatchString -> Int
-score (Desc fs _) t = length t - editDistance full t
+score (Desc fs _) t = editDistance full t
   where
     full = foldl' (\s f -> s ++ toString f) "" fs
     toString (Fuzzy s) = s
