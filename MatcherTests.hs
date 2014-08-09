@@ -10,6 +10,7 @@ tests = TestLabel "Matcher" $ TestList
     , testMatchesDisallowed
     , testMatchesExamples
     , testScore
+    , testVersion
     ]
 
 testEmpty = TestLabel "Empty" $ TestList
@@ -59,4 +60,16 @@ testScore = TestLabel "Score" $ TestList
     , test 0     (Desc [Fuzzy "a", Exact "b", Fuzzy "c"] [])   "abc"
     ] where
         test e d s = (show s ++ show d) ~: e ~=? score d s
+
+testVersion = TestLabel "Version" $ TestList
+    [ test 0     (Desc [v, e] [])                                  "abc1.0def"
+    , test 0     (Desc [v, e] [])                                  "abc0def"
+    , test 0     (Desc [v, e] [])                                  "abc1.0.0def"
+    , test 0     (Desc [v, e] [])                                  "abc99999.99999.99999def"
+    , test 0     (Desc [v, e] [])                                  "abc0_1def"
+    , test 0     (Desc [Version "a*(b)+c", e] [])                  "a*(b)+c1.0def"
+    ] where
+        test e d s = (show s ++ show d) ~: e ~=? score d s
+        v = Version "abc"
+        e = Exact "def"
 

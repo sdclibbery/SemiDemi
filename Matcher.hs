@@ -14,6 +14,7 @@ module Matcher (
 ) where
 import Data.List
 import Data.Array
+import Text.Regex
 
 -- |The type of all strings used in this module
 type MatchString = String
@@ -22,7 +23,7 @@ type MatchString = String
 data Desc = Desc [Flow] [Disallowed] deriving (Show, Eq)
 
 -- |Parts of a Matcher Description that must be matched exactly
-data Flow = Exact MatchString | Fuzzy MatchString deriving (Show, Eq)
+data Flow = Exact MatchString | Fuzzy MatchString | Version MatchString deriving (Show, Eq)
 
 -- |Disallowed parts that must not be in the string being matched
 data Disallowed = Disallowed MatchString deriving (Show, Eq)
@@ -45,11 +46,14 @@ matches (Desc fs ds) t = disallowed && exact
 
 -- |Score a given target string against a matcher. The lower the score, the closer the match.
 score :: Desc -> MatchString -> Int
-score (Desc fs _) t = editDistance full t
+score (Desc fs _) t = editDistance full $ foldr normalise t fs
   where
     full = foldl' (\s f -> s ++ toString f) "" fs
     toString (Fuzzy s) = s
     toString (Exact s) = s
+    toString (Version s) = s
+    normalise (Version s) t = subRegex (mkRegexWithOpts (intersperse '\\' s ++ "[0-9._]+") False False) t s
+    normalise _ t = t
 
 editDistance :: (Eq a) => [a] -> [a] -> Int
 editDistance xs ys = levMemo ! (n, m)
