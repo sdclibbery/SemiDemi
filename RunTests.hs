@@ -16,11 +16,11 @@ import qualified DemiParserTests
    * Then do a full editDistance on the full strings to get the score...
 
 
-* Support version normalisation
+x Support version normalisation
  x Matcher data for version
  x Matcher handles version normalisation before scoring
- * Must have a test with two matchers differing by a single space, then match against a string differing by several version chars
- * Parse version, including context
+ x Must have a test with two matchers differing by a single space, then match against a string differing by several version chars
+ x Parse version, including context
 * Try regression again
  * DemiMaker adds version markup
 * Remove generic smarttv matcher from .demi file, but use it as the default result when nothing else matches

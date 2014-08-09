@@ -9,6 +9,7 @@ tests = TestLabel "BestMatch" $ TestList
     [ testSingleResult
     , testNoResult
     , testMultipleResult
+    , testVersion
     ]
 
 testNoResult = TestLabel "NoResult" $ TestList
@@ -32,3 +33,11 @@ testMultipleResult = TestLabel "MultipleResult" $ TestList
     ] where
         test e ms s = (show s ++ show ms) ~: e ~=? match s ms
         m s = (M.Desc [M.Fuzzy s, M.Exact "WooHoo"] [], s)
+
+testVersion = TestLabel "Version" $ TestList
+    [ test   (Right $ m "abc")       [m "abc", m "ab c"]                      "abc123"
+    , test   (Right $ m "abc")       [m "abc", m "ab c"]                      "abc456"
+    ] where
+        test e ms s = (show s ++ show ms) ~: e ~=? match s ms
+        m s = (M.Desc [M.Fuzzy s, M.Version "c"] [], s)
+

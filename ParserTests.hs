@@ -9,6 +9,7 @@ tests = TestLabel "Parser" $ TestList
     [ testExact
     , testEmpty
     , testDisallowed
+    , testVersion
     , testExample
     ]
 
@@ -33,6 +34,12 @@ testDisallowed = TestLabel "Disallowed" $ TestList
     , test (Left "\"matcher\" (line 1, column 7):\nunexpected 'd'\nexpecting end of input or \"[-\"")        "[-abc]def"
     , test (Right $ Desc [Fuzzy "123"] [Disallowed "abc", Disallowed "def"])                                 "123[-abc][-def]"
     , test (Right $ Desc [Fuzzy "123", Exact "abc"] [Disallowed "def"])                                      "123[+abc][-def]"
+    ] where
+        test e s = (show s) ~: e ~=? parse s
+
+testVersion = TestLabel "Version" $ TestList
+    [ test (Right $ Desc [Version "abc"] [])                                                              "[vabc]"
+    , test (Right $ Desc [Version "abc "] [])                                                             "[vabc 1.0.0]"
     ] where
         test e s = (show s) ~: e ~=? parse s
 
