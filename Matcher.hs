@@ -45,8 +45,8 @@ matches (Desc fs ds) t = disallowed && exact
         matchExact _ = True
 
 -- |Score a given target string against a matcher. The lower the score, the closer the match.
-score :: Desc -> MatchString -> Int
-score (Desc fs _) t = editDistance full $ foldr normalise t fs
+score :: Desc -> MatchString -> Float
+score (Desc fs _) t = fromIntegral $ editDistance full $ foldr normalise t fs
   where
     full = foldl' (\s f -> s ++ toString f) "" fs
     toString (Fuzzy s) = s

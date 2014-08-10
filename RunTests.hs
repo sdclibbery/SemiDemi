@@ -15,12 +15,15 @@ import qualified DemiParserTests
    * First, normalise by removing versions using the context info
    * Then do a full editDistance on the full strings to get the score...
 
+!! playstation is a pain in the bum!
+! The one that now has generic version matching eats all the others :-/
+? Do we need some kind of numeric-aware version matching? EG [<4.00] or something? This would need to be applied at the match (not score) phase
 
-x Support version normalisation
- x Matcher data for version
- x Matcher handles version normalisation before scoring
- x Must have a test with two matchers differing by a single space, then match against a string differing by several version chars
- x Parse version, including context
+* Need to score for closeness to version number
+ X Score output must be float not int
+ * Matcher Version must have second string for original version
+ * Score between 0-1 for distance from each version
+ * Parser parses the second string
 * Try regression again
  * DemiMaker adds version markup
 * Remove generic smarttv matcher from .demi file, but use it as the default result when nothing else matches

@@ -53,21 +53,23 @@ testMatchesExamples = TestLabel "MatchesExamples" $ TestList
         desc = Desc [Exact "Panasonic.bd.pro4r.2014"] [Disallowed "Opera"]
 
 testScore = TestLabel "Score" $ TestList
-    [ test 3     (Desc [] [])                                  "abc"
-    , test 0     (Desc [Fuzzy "abc"] [])                       "abc"
-    , test 0     (Desc [Fuzzy "abc"] [Disallowed "def"])       "abc"
-    , test 0     (Desc [Fuzzy "ab", Fuzzy "c"] [])             "abc"
-    , test 0     (Desc [Fuzzy "a", Exact "b", Fuzzy "c"] [])   "abc"
+    [ test 3.0    (Desc [] [])                                  "abc"
+    , test 0.0     (Desc [Fuzzy "abc"] [])                       "abc"
+    , test 0.0     (Desc [Fuzzy "abc"] [Disallowed "def"])       "abc"
+    , test 0.0     (Desc [Fuzzy "ab", Fuzzy "c"] [])             "abc"
+    , test 0.0     (Desc [Fuzzy "a", Exact "b", Fuzzy "c"] [])   "abc"
     ] where
         test e d s = (show s ++ show d) ~: e ~=? score d s
 
 testVersion = TestLabel "Version" $ TestList
-    [ test 0     (Desc [v, e] [])                                  "abc1.0def"
-    , test 0     (Desc [v, e] [])                                  "abc0def"
-    , test 0     (Desc [v, e] [])                                  "abc1.0.0def"
-    , test 0     (Desc [v, e] [])                                  "abc99999.99999.99999def"
-    , test 0     (Desc [v, e] [])                                  "abc0_1def"
-    , test 0     (Desc [Version "a*(b)+c", e] [])                  "a*(b)+c1.0def"
+    [ test 0.0     (Desc [v, e] [])                                  "abc1.0def"
+    , test 0.0     (Desc [v, e] [])                                  "abc0def"
+    , test 0.0     (Desc [v, e] [])                                  "abc1.0.0def"
+    , test 0.0     (Desc [v, e] [])                                  "abc99999.99999.99999def"
+    , test 0.0     (Desc [v, e] [])                                  "abc0_1def"
+    , test 0.0     (Desc [Version "a*(b)+c", e] [])                  "a*(b)+c1.0def"
+--    , test 0.0     (Desc [Version "abc" "1.00"] [])                   "abc1.00"
+--    , test 0.25    (Desc [Version "abc" "2.22"] [])                   "abc1.00"
     ] where
         test e d s = (show s ++ show d) ~: e ~=? score d s
         v = Version "abc"
