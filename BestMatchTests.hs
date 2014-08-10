@@ -10,6 +10,7 @@ tests = TestLabel "BestMatch" $ TestList
     , testNoResult
     , testMultipleResult
     , testVersion
+    , testExample
     ]
 
 testNoResult = TestLabel "NoResult" $ TestList
@@ -39,5 +40,11 @@ testVersion = TestLabel "Version" $ TestList
     , test   (Right $ m "abc")       [m "abc", m "ab c"]                      "abc456"
     ] where
         test e ms s = (show s ++ show ms) ~: e ~=? match s ms
-        m s = (M.Desc [M.Fuzzy s, M.Version "c"] [], s)
+        m s = (M.Desc [M.Fuzzy s, M.Version "c" "123"] [], s)
 
+testExample = TestLabel "Example" $ TestList
+    [ test   (Right $ m2)       [m1, m2]                      "Mozilla/5.0 (PLAYSTATION 3; 2.00)"
+    ] where
+        test e ms s = (show s ++ show ms) ~: e ~=? match s ms
+        m1 = (M.Desc [M.Version "Mozilla/" "5.0", M.Fuzzy " (", M.Exact "PLAYSTATION 3", M.Version "; " "1.00", M.Fuzzy ")"] [], "m1")
+        m2 = (M.Desc [M.Version "Mozilla/" "5.0", M.Fuzzy " (", M.Exact "PLAYSTATION 3", M.Version "; " "2.00", M.Fuzzy ")"] [], "m2")
