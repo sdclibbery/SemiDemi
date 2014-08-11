@@ -191,5 +191,9 @@ markup wid s = foldr replace s replacements
 				, exact "Westerndigital/Streamer2010"
 				, exact "YouViewHTML"
 				, exact "Loewe; SL[0-9]{3};"
+				, exact "PLAYSTATION [34]"
+				, exact "PS3"
+				, version "Mozilla/"
 			]
 		exact s = ("(" ++ s ++ ")", "[+\\1]")
+		version s = ("(" ++ s ++ "[0-9._]+)", "[v\\1]")

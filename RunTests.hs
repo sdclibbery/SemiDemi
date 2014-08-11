@@ -15,13 +15,7 @@ import qualified DemiParserTests
    * First, normalise by removing versions using the context info
    * Then do a full editDistance on the full strings to get the score...
 
-!! playstation is a pain in the bum!
-! The one that now has generic version matching eats all the others :-/
-? Do we need some kind of numeric-aware version matching? EG [<4.00] or something? This would need to be applied at the match (not score) phase
-
-x Need to be able to mark up some versions as contributing to the score, and others not
- ! Dont need this! Versions that count should be left as Fuzzy markup, not version, by definition!!
-* When PS tests all pass, update DemiMaker.hs to produce the required matchers...
+x When PS tests all pass, update DemiMaker.hs to produce the required matchers...
 * Try regression again
  * DemiMaker adds version markup
 * Remove generic smarttv matcher from .demi file, but use it as the default result when nothing else matches
