@@ -194,6 +194,12 @@ markup wid s = foldr replace s replacements
 				, exact "PLAYSTATION [34]"
 				, exact "PS3"
 				, version "Mozilla/"
+--				, version "Opera/"
+--				, version "Presto/"
+--				, version "Version/"
+--				, version "AppleWebkit/"
+--				, version "Safari/"
+--				, version "LG Browser/"
 			]
 		exact s = ("(" ++ s ++ ")", "[+\\1]")
 		version s = ("(" ++ s ++ "[0-9._]+)", "[v\\1]")
