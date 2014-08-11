@@ -38,9 +38,9 @@ testDisallowed = TestLabel "Disallowed" $ TestList
         test e s = (show s) ~: e ~=? parse s
 
 testVersion = TestLabel "Version" $ TestList
-    [ test (Right $ Desc [Version "abc" ""] [])                                                              "[vabc]"
-    , test (Right $ Desc [Version "abc" "1_2.3_09"] [])                                                      "[vabc1_2.3_09]"
-    , test (Right $ Desc [Version "abc " "1.0.0"] [])                                                        "[vabc 1.0.0]"
+    [ test (Right $ Desc [Version "abc"] [])                                                   "[vabc]"
+    , test (Right $ Desc [Version "abc"] [])                                                   "[vabc1_2.3_09]"
+    , test (Right $ Desc [Version "abc "] [])                                                  "[vabc 1.0.0]"
     ] where
         test e s = (show s) ~: e ~=? parse s
 

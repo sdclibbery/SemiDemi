@@ -49,10 +49,9 @@ parseVersion = do
     try $ string "[v"
     e <- parseEscaped ']'
     string "]"
-    return $ M.Version (identifier e) (version e)
+    return $ M.Version (identifier e)
       where
         identifier = reverse . dropWhile isVersion . reverse
-        version = reverse . takeWhile isVersion . reverse
         isVersion = flip elem "0123456789._"
 
 parseFuzzy :: Parser M.Flow

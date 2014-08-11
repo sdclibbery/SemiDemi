@@ -19,14 +19,8 @@ import qualified DemiParserTests
 ! The one that now has generic version matching eats all the others :-/
 ? Do we need some kind of numeric-aware version matching? EG [<4.00] or something? This would need to be applied at the match (not score) phase
 
-x Need to score for closeness to version number
- x Matcher Version must have second string for original version
- x Parser parses the second string
- x Score between 0-1 for distance from each version
-* Need to be able to mark up some versions as contributing to the score, and others not
- * In PS case, Mozilla version is irrelevant, but PS version matters...
- * Can do entirely in the parser:   [Va1] -> Version "a" "1"   while  [va1] -> Version "a" ""
- * Then update tvs.demi
+x Need to be able to mark up some versions as contributing to the score, and others not
+ ! Dont need this! Versions that count should be left as Fuzzy markup, not version, by definition!!
 * When PS tests all pass, update DemiMaker.hs to produce the required matchers...
 * Try regression again
  * DemiMaker adds version markup

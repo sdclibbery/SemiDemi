@@ -40,11 +40,11 @@ testVersion = TestLabel "Version" $ TestList
     , test   (Right $ m "abc")       [m "abc", m "ab c"]                      "abc456"
     ] where
         test e ms s = (show s ++ show ms) ~: e ~=? match s ms
-        m s = (M.Desc [M.Fuzzy s, M.Version "c" "123"] [], s)
+        m s = (M.Desc [M.Fuzzy s, M.Version "c"] [], s)
 
 testExample = TestLabel "Example" $ TestList
     [ test   (Right $ m2)       [m1, m2]                      "Mozilla/5.0 (PLAYSTATION 3; 2.00)"
     ] where
         test e ms s = (show s ++ show ms) ~: e ~=? match s ms
-        m1 = (M.Desc [M.Version "Mozilla/" "5.0", M.Fuzzy " (", M.Exact "PLAYSTATION 3", M.Version "; " "1.00", M.Fuzzy ")"] [], "m1")
-        m2 = (M.Desc [M.Version "Mozilla/" "5.0", M.Fuzzy " (", M.Exact "PLAYSTATION 3", M.Version "; " "2.00", M.Fuzzy ")"] [], "m2")
+        m1 = (M.Desc [M.Version "Mozilla/", M.Fuzzy " (", M.Exact "PLAYSTATION 3", M.Fuzzy "; 1.00)"] [], "m1")
+        m2 = (M.Desc [M.Version "Mozilla/", M.Fuzzy " (", M.Exact "PLAYSTATION 3", M.Fuzzy "; 2.00)"] [], "m2")
