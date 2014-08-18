@@ -6,6 +6,8 @@ import qualified DemiParserTests
 
 {- TODO:
 
+* Reprofile with many 'version' tags in DemiMaker
+
 * Try regression again, work through each failure in turn
  * Remove generic smarttv matcher from .demi file, but use it as the default result when nothing else matches
 

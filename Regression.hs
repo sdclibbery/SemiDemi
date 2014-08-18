@@ -26,7 +26,7 @@ main = do
 
 regression :: String -> String -> String -> String
 regression d e t = case (parse d) of
-    (Right ms) -> (foldr (++) "" $ map (either (++ "\n\n") id) $ results ms) ++ "\nTotal: " ++ (show $ length ts) ++ "\nFailed: " ++ (show $ length $ lefts $ results ms)
+    (Right ms) -> (foldr (++) "" $ map (either (++ "\n\n") id) $ results ms) ++ "\nTotal: " ++ (show $ length ts) ++ "\n" -- Failed: " ++ (show $ length $ lefts $ results ms)
     (Left err) -> err
     where
         ts = lines t
@@ -34,10 +34,11 @@ regression d e t = case (parse d) of
         results ms = map (test ms es) $ zip ts [0..]
 
 test :: [Matcher String] -> [String] -> (String, Int) -> Either String String
-test ms es (t, i) = if e == snd m then Right $ "" else Left $ "\nFAIL: " ++ t ++ "\n    EXPECTED: " ++ e ++ "\n         GOT: " ++ (snd m)
+test ms es (t, i) = if e == snd m then Right $ "" else Left $ "\n\nFAIL (" ++ (show i) ++ "): " ++ t ++ "\n\nEXPECTED: " ++ (showExpected e) ++ "\n\nGOT: " ++ (show m) ++ "\n"
     where
         m = matchWithDefault (M.Desc [] [], "generic_smarttv_browser") t ms
         e = es !! i
+        showExpected e = show $ head $ filter (\m -> snd m == e) ms
 
 matchWithDefault :: Matcher String -> String -> [Matcher String] -> Matcher String
 matchWithDefault def t ms = case match t ms of
