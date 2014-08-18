@@ -25,7 +25,7 @@ main = do
 
 regression :: String -> String -> String -> String
 regression d e t = case (parse d) of
-	(Right ms) -> (foldr (\a b -> a ++ "\n" ++ b) "" $ map (either id id) $ results ms) ++ "\nTotal: " ++ (show $ length ts) ++ "\nFailed: " ++ (show $ length $ lefts $ results ms)
+	(Right ms) -> (foldr (++) "" $ map (either (++ "\n\n") id) $ results ms) ++ "\nTotal: " ++ (show $ length ts) ++ "\nFailed: " ++ (show $ length $ lefts $ results ms)
 	(Left err) -> err
 	where
 		ts = lines t
@@ -35,7 +35,7 @@ regression d e t = case (parse d) of
 test :: [Matcher String] -> [String] -> (String, Int) -> Either String String
 test ms es (t, i) = do
 	m <- match t ms
-	if e == snd m then Right $ "Pass(" ++ (show i) ++ ")\n" else Left $ "\nFAIL: " ++ t ++ "\n    EXPECTED: " ++ e ++ "\n         GOT: " ++ (snd m)
+	if e == snd m then Right $ "" else Left $ "\nFAIL: " ++ t ++ "\n    EXPECTED: " ++ e ++ "\n         GOT: " ++ (snd m)
 	where
 		e = es !! i
 
