@@ -12,6 +12,7 @@ tests = TestLabel "Matcher" $ TestList
     , testScore
     , testVersion
     , testScoreExample
+    , testShow
     ]
 
 testEmpty = TestLabel "Empty" $ TestList
@@ -87,3 +88,13 @@ testScoreExample = TestLabel "ScoreExample" $ TestList
         ps1 = Desc [Version "Mozilla/", Fuzzy " (", Exact "PLAYSTATION 3", Fuzzy "; 1.00)"] []
         ps2 = Desc [Version "Mozilla/", Fuzzy " (", Exact "PLAYSTATION 3", Fuzzy "; 2.00)"] []
         ps4 = Desc [Version "Mozilla/", Fuzzy " (", Exact "PLAYSTATION 3", Fuzzy "; 4.77)"] []
+
+testShow = TestLabel "Show" $ TestList
+    [ test   "abc"                                               (Desc [Fuzzy "abc"] [])
+    , test   "[+abc]"                                            (Desc [Exact "abc"] [])
+    , test   "[vabc000]"                                         (Desc [Version "abc"] [])
+    , test   "[vMozilla/000] ([+PLAYSTATION 3]; 1.00)"           (Desc [Version "Mozilla/", Fuzzy " (", Exact "PLAYSTATION 3", Fuzzy "; 1.00)"] [])
+    , test   "[-abc]"                                            (Desc [] [Disallowed "abc"])
+    , test   "[vMozilla/000] ([+PLAYSTATION 3]; 1.00)[-ghi]"     (Desc [Version "Mozilla/", Fuzzy " (", Exact "PLAYSTATION 3", Fuzzy "; 1.00)"] [Disallowed "ghi"])
+    ] where
+        test e d = (show d) ~: e ~=? show d

@@ -6,6 +6,8 @@ import qualified DemiParserTests
 
 {- TODO:
 
+* show instance for Matcher to build back into the markup
+
 * Reprofile with many 'version' tags in DemiMaker
 
 * Try regression again, work through each failure in turn

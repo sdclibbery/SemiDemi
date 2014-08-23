@@ -21,13 +21,24 @@ import Text.Regex
 type MatchString = String
 
 -- |A Matcher Description: how to match against a string
-data Desc = Desc [Flow] [Disallowed] deriving (Show, Eq)
+data Desc = Desc [Flow] [Disallowed] deriving (Eq)
 
 -- |Parts of a Matcher Description that must be matched exactly
-data Flow = Exact MatchString | Fuzzy MatchString | Version MatchString deriving (Show, Eq)
+data Flow = Exact MatchString | Fuzzy MatchString | Version MatchString deriving (Eq)
 
 -- |Disallowed parts that must not be in the string being matched
-data Disallowed = Disallowed MatchString deriving (Show, Eq)
+data Disallowed = Disallowed MatchString deriving (Eq)
+
+instance Show Desc where
+    show (Desc fs ds) = concatMap show fs ++ concatMap show ds
+
+instance Show Flow where
+    show (Exact e) = "[+" ++ e ++ "]"
+    show (Fuzzy f) = f
+    show (Version v) = "[v" ++ v ++ "000]"
+
+instance Show Disallowed where
+    show (Disallowed d) = "[-" ++ d ++ "]"
 
 -- |Test whether a matcher is empty (contains no match elements)
 empty :: Desc -> Bool
