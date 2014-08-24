@@ -6,7 +6,7 @@ import qualified DemiParserTests
 
 {- TODO:
 
-* Support comments in .demi files
+x Support comments in .demi files
 
 * Organise and comment the tvs.demi file to make it easier to work with
 
