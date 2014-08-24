@@ -6,12 +6,20 @@ import qualified DemiParserTests
 
 {- TODO:
 
-* show instance for Matcher to build back into the markup
+* Support comments in .demi files
 
-* Reprofile with many 'version' tags in DemiMaker
+* Organise and comment the tvs.demi file to make it easier to work with
 
-* Try regression again, work through each failure in turn
- * Remove generic smarttv matcher from .demi file, but use it as the default result when nothing else matches
+* Work through and get all regression tests passing...           
+
+* Could probably optimise matching by compiling all matchers into a tree or internal DSL that can make less tests to match each UA
+
+* Notes for writing matchers:
+ * Use [+...] with something that uniquely identifies the UA ideally
+ * Failing that, use several [+...]'s, along with fuzzy matching
+ * Use [-...] only if it will cleanly disambiguate
+ * Use [v...] only if required to help the fuzzy matcher
+ * Use multiple matchers for the same UA if there are several distinct UA 'patterns'
 
 -}
 
