@@ -32,7 +32,6 @@ parseDemi = do
     parseComments
     many $ do
         parseComments
-        skipMany newline
         m <- parseMatcher
         parseComments
         return m
@@ -41,6 +40,7 @@ parseComments :: Parser ()
 parseComments = skipMany $ do
     char '#'
     manyTill anyChar (newline <|> (eof >> return '\n'))
+    optional eol
     return ()
 
 parseMatcher :: Parser DemiMatcher
@@ -48,7 +48,12 @@ parseMatcher = do
     matcherStr <- many1 $ noneOf "\t"
     char '\t'
     userdata <- many1 $ noneOf "\r\n"
-    many $ oneOf "\r\n"
+    eol
     case (P.parse matcherStr) of
         Left err -> fail err
         Right r -> return (r, userdata)
+
+eol :: Parser ()
+eol = do
+    many $ oneOf "\r\n"
+    return ()

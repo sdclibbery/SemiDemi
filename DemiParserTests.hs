@@ -15,9 +15,10 @@ testComments = TestLabel "Comments" $ TestList
     , test   (Right [])                                                                "# abc\n"
     , test   (Right [])                                                                "# abc\n# 123"
     , test   (Right [(Desc [Exact "def"] [], "foo")])                                  "# abc\n# 123\n[+def]\tfoo"
-    , test   (Right [(Desc [Exact "def"] [], "foo")])                                  "# abc\n# 123\n\n\n\n[+def]\tfoo"
+    , test   (Right [(Desc [Exact "def"] [], "foo")])                                  "# abc\n\n# 123\n\n[+def]\tfoo"
     , test   (Right [(Desc [Exact "def"] [], "foo")])                                  "[+def]\tfoo\n# abc"
     , test   (Right [(Desc [Exact "def"] [], "foo"), (Desc [Exact "ghi"] [], "bar")])  "# abc\n[+def]\tfoo\n# abc\n[+ghi]\tbar\n# abc"
+    , test   (Right [(Desc [Exact "def"] [], "foo"), (Desc [Exact "ghi"] [], "bar")])  "# abc\r\n\r\n[+def]\tfoo\r\n\r\n# abc\r\n\r\n[+ghi]\tbar\r\n\r\n# abc"
     ] where
         test e s = (show s) ~: e ~=? parse s
 

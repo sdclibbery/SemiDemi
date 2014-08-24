@@ -6,9 +6,7 @@ import qualified DemiParserTests
 
 {- TODO:
 
-x Support comments in .demi files
-
-* Organise and comment the tvs.demi file to make it easier to work with
+x Organise and comment the tvs.demi file to make it easier to work with
 
 * Work through and get all regression tests passing...           
 
