@@ -6,7 +6,9 @@ import qualified DemiParserTests
 
 {- TODO:
 
-x Organise and comment the tvs.demi file to make it easier to work with
+* Sort the 'head' in Regression.hs
+ * Empty list means that there are NO matchers setup for this test yet (think TDD red)
+ * More than one entry means multiple could have matched, and they should ALL be shown as possible expected matchers in the results...
 
 * Work through and get all regression tests passing...           
 
