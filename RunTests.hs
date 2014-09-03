@@ -6,8 +6,7 @@ import qualified DemiParserTests
 
 {- TODO:
 
-* Lets get some stats on how many possible matchers we have to score for each UA?
- * How can we reduce this number...
+* Make a sublime syntax highlighter for .demi files
 
 * Optimise matching by building a tree of Exact/Disallowed
  ! This a smallish optimisation now, but as the total number of matchers in the .demi file rises, the runtime will rise nonlinearly...
@@ -15,10 +14,15 @@ import qualified DemiParserTests
  * Define and build a match tree
  * Then match by taking the UA string through the match tree to return a list of possible matches
 
+* New tool that outputs groups of matchers that must be fuzzy-matched together (these are the tree leaves)
+ * Use this to add disambiguating [+..] and therefore optimise Regression time...
+
 * ?How could we apply a similar global optimisation to scoring??
  ? Could we build a 'prefix tree' for each leaf of the 'matcher tree'?
   ? Could we then share some of the editDistance work between the possible matchers?
   ? Alternatively, can we discard some of the possible matchers early this way??
+ ? Can we make the lev memoisation cache global so it can share value across UA matches?
+  ? Would nee to switch away from the Array based lev algo...
 
 * Sort the 'head' in Regression.hs
  * Empty list means that there are NO matchers setup for this test yet (think TDD red)
