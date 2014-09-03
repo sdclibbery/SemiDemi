@@ -13,6 +13,7 @@ import Data.Maybe
 import Data.Char
 import Data.Ord
 import qualified Matcher as M
+import qualified Scorer as S
 
 -- |Matcher: Description of the matcher, plus some user data
 type Matcher a = (M.Desc, a)
@@ -25,5 +26,5 @@ match s = result . filter match
 		result [] = Left $ "No matches for: " ++ s 
 		result (m:[]) = Right m
 		result ms = Right $ snd $ head $ sortBy (comparing fst) $ map score ms
-		score m = (M.score (fst m) s, m)
+		score m = (S.score (fst m) s, m)
 

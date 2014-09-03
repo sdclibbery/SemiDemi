@@ -1,17 +1,16 @@
 import Test.HUnit
 import qualified MatcherTests
+import qualified ScorerTests
 import qualified ParserTests
 import qualified BestMatchTests
 import qualified DemiParserTests
 
 {- TODO:
 
-* Make a sublime syntax highlighter for .demi files
-
 * Optimise matching by building a tree of Exact/Disallowed
  ! This a smallish optimisation now, but as the total number of matchers in the .demi file rises, the runtime will rise nonlinearly...
- * Split matching and scoring into separate files
- * Define and build a match tree
+ x Split matching and scoring into separate files
+ * Define and build a match tree in a new module
  * Then match by taking the UA string through the match tree to return a list of possible matches
 
 * New tool that outputs groups of matchers that must be fuzzy-matched together (these are the tree leaves)
@@ -31,7 +30,7 @@ import qualified DemiParserTests
 * Work through and get all regression tests passing...           
 
 * Notes for writing matchers:
- * Use [+...] with something that uniquely identifies the UA ideally
+ * Ideally, use [+...] with something that uniquely identifies the UA
  * Failing that, use several [+...]'s, along with fuzzy matching
  * Use [-...] only if it will cleanly disambiguate
  * Use [v...] only if required to help the fuzzy matcher
@@ -41,6 +40,7 @@ import qualified DemiParserTests
 
 main = runTestTT $ TestList
         [ MatcherTests.tests
+        , ScorerTests.tests
         , ParserTests.tests
         , BestMatchTests.tests
         , DemiParserTests.tests
