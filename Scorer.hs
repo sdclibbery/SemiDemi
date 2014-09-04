@@ -18,7 +18,7 @@ score (Desc fs _) t = editDistance full $ foldr normalise t fs
   where
     full = foldl' (\s f -> s ++ toString f) "" fs
     toString (Fuzzy s) = s
-    toString (Exact s) = s
+    toString (Invariant s) = s
     toString (Version s) = s
     normalise (Version s) t = subRegex (mkRegexWithOpts (intersperse '\\' s ++ "[0-9._]+") False False) t s
     normalise _ t = t

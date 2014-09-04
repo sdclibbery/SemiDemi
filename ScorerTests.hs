@@ -16,7 +16,7 @@ testScore = TestLabel "Score" $ TestList
     , test 0     (Desc [Fuzzy "abc"] [])                       "abc"
     , test 0     (Desc [Fuzzy "abc"] [Disallowed "def"])       "abc"
     , test 0     (Desc [Fuzzy "ab", Fuzzy "c"] [])             "abc"
-    , test 0     (Desc [Fuzzy "a", Exact "b", Fuzzy "c"] [])   "abc"
+    , test 0     (Desc [Fuzzy "a", Invariant "b", Fuzzy "c"] [])   "abc"
     ] where
         test e d s = (show s ++ show d) ~: e ~=? score d s
 
@@ -33,7 +33,7 @@ testVersion = TestLabel "Version" $ TestList
     ] where
         test e d s = (show s ++ show d) ~: e ~=? score d s
         v = Version "abc"
-        e = Exact "def"
+        e = Invariant "def"
 
 testScoreExample = TestLabel "ScoreExample" $ TestList
     [ test   1     ps1                      "Mozilla/5.0 (PLAYSTATION 3; 2.00)"
@@ -42,6 +42,6 @@ testScoreExample = TestLabel "ScoreExample" $ TestList
     , test   1     ps4                      "Mozilla/2.0 (PLAYSTATION 3; 4.70)"
     ] where
         test e d s = (show s ++ show d) ~: e ~=? score d s
-        ps1 = Desc [Version "Mozilla/", Fuzzy " (", Exact "PLAYSTATION 3", Fuzzy "; 1.00)"] []
-        ps2 = Desc [Version "Mozilla/", Fuzzy " (", Exact "PLAYSTATION 3", Fuzzy "; 2.00)"] []
-        ps4 = Desc [Version "Mozilla/", Fuzzy " (", Exact "PLAYSTATION 3", Fuzzy "; 4.77)"] []
+        ps1 = Desc [Version "Mozilla/", Fuzzy " (", Invariant "PLAYSTATION 3", Fuzzy "; 1.00)"] []
+        ps2 = Desc [Version "Mozilla/", Fuzzy " (", Invariant "PLAYSTATION 3", Fuzzy "; 2.00)"] []
+        ps4 = Desc [Version "Mozilla/", Fuzzy " (", Invariant "PLAYSTATION 3", Fuzzy "; 4.77)"] []

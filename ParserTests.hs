@@ -6,19 +6,19 @@ import Matcher
 import Parser
 
 tests = TestLabel "Parser" $ TestList
-    [ testExact
+    [ testInvariant
     , testEmpty
     , testDisallowed
     , testVersion
     , testExample
     ]
 
-testExact = TestLabel "Exact" $ TestList
-    [ test (Right $ Desc [Exact "abc"] [])                                                                  "[+abc]"
-    , test (Right $ Desc [Exact "ab]c"] [])                                                                 "[+ab\\]c]"
+testInvariant = TestLabel "Invariant" $ TestList
+    [ test (Right $ Desc [Invariant "abc"] [])                                                                  "[+abc]"
+    , test (Right $ Desc [Invariant "ab]c"] [])                                                                 "[+ab\\]c]"
     , test (Left "\"matcher\" (line 1, column 6):\nunexpected end of input\nexpecting \"\\\\\" or \"]\"")   "[+abc"
-    , test (Right $ Desc [Fuzzy "123", Exact "abc", Fuzzy "456"] [])                                        "123[+abc]456"
-    , test (Right $ Desc [Exact "abc", Exact "123"] [])                                                     "[+abc][+123]"
+    , test (Right $ Desc [Fuzzy "123", Invariant "abc", Fuzzy "456"] [])                                        "123[+abc]456"
+    , test (Right $ Desc [Invariant "abc", Invariant "123"] [])                                                     "[+abc][+123]"
     ] where
         test e s = (show s) ~: e ~=? parse s
 
@@ -33,7 +33,7 @@ testDisallowed = TestLabel "Disallowed" $ TestList
     , test (Left "\"matcher\" (line 1, column 6):\nunexpected end of input\nexpecting \"\\\\\" or \"]\"")    "[-abc"
     , test (Left "\"matcher\" (line 1, column 7):\nunexpected 'd'\nexpecting end of input or \"[-\"")        "[-abc]def"
     , test (Right $ Desc [Fuzzy "123"] [Disallowed "abc", Disallowed "def"])                                 "123[-abc][-def]"
-    , test (Right $ Desc [Fuzzy "123", Exact "abc"] [Disallowed "def"])                                      "123[+abc][-def]"
+    , test (Right $ Desc [Fuzzy "123", Invariant "abc"] [Disallowed "def"])                                      "123[+abc][-def]"
     ] where
         test e s = (show s) ~: e ~=? parse s
 
@@ -47,7 +47,7 @@ testVersion = TestLabel "Version" $ TestList
 testExample = TestLabel "Example" $ TestList
     [ test (Right $ Desc [
             Fuzzy "Mozilla/1.2(compatible; U; InfiNet 2.3; Diga) AppleWebKit/3.4+ (KHTML, like Gecko)",
-            Exact "(avdn/Panasonic.bd.pro4r.2014)"
+            Invariant "(avdn/Panasonic.bd.pro4r.2014)"
         ] [Disallowed"Opera"])   "Mozilla/1.2(compatible; U; InfiNet 2.3; Diga) AppleWebKit/3.4+ (KHTML, like Gecko)[+(avdn/Panasonic.bd.pro4r.2014)][-Opera]"
     ] where
         test e s = (show s) ~: e ~=? parse s

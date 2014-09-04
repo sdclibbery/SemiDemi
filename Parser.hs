@@ -22,7 +22,7 @@ parse t = case (Text.Parsec.parse parseDesc "matcher" t) of
 
 parseDesc :: Parser M.Desc
 parseDesc = do
-    fs <- many (parseExact Ap.<|> parseVersion Ap.<|> parseFuzzy)
+    fs <- many (parseInvariant Ap.<|> parseVersion Ap.<|> parseFuzzy)
     ds <- manyTill parseDisallowed eof
     return $ M.Desc fs ds
 
@@ -37,12 +37,12 @@ parseEscaped c = do
             c <- oneOf "\\[]"
             return [c]
 
-parseExact :: Parser M.Flow
-parseExact = do
+parseInvariant :: Parser M.Flow
+parseInvariant = do
     try $ string "[+"
-    e <- parseEscaped ']'
+    i <- parseEscaped ']'
     string "]"
-    return $ M.Exact e
+    return $ M.Invariant i
 
 parseVersion :: Parser M.Flow
 parseVersion = do

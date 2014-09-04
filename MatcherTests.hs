@@ -6,7 +6,7 @@ import Matcher
 
 tests = TestLabel "Matcher" $ TestList
     [ testEmpty
-    , testMatchesExact
+    , testMatchesInvariant
     , testMatchesDisallowed
     , testMatchesExamples
     , testShow
@@ -15,22 +15,22 @@ tests = TestLabel "Matcher" $ TestList
 testEmpty = TestLabel "Empty" $ TestList
     [ test True        (Desc [] [])
     , test True        (Desc [Fuzzy "any"] [])
-    , test False       (Desc [Exact "any"] [])
-    , test False       (Desc [Exact "any"] [Disallowed "atall"])
+    , test False       (Desc [Invariant "any"] [])
+    , test False       (Desc [Invariant "any"] [Disallowed "atall"])
     , test False       (Desc [] [Disallowed "atall"])
     ] where
         test e d = (show d) ~: e ~=? empty d
 
-testMatchesExact = TestLabel "MatchesExact" $ TestList
-    [ test True     (Desc [Exact "abc"] [])                   "abc"
-    , test False    (Desc [Exact "abc"] [])                   "abd"
-    , test True     (Desc [Exact "ab"] [])                    "abc"
-    , test True     (Desc [Exact "bc"] [])                    "abc"
-    , test True     (Desc [Exact "ab", Exact "bc"] [])        "abc"
-    , test False    (Desc [Exact "ab", Exact "cd"] [])        "abc"
-    , test True     (Desc [Exact "ab", Exact "c"] [])         "abc"
-    , test True     (Desc [Exact "a", Exact "c"] [])          "abc"
-    , test True     (Desc [Exact "cde"] [])                   "abcabcde"
+testMatchesInvariant = TestLabel "MatchesInvariant" $ TestList
+    [ test True     (Desc [Invariant "abc"] [])                   "abc"
+    , test False    (Desc [Invariant "abc"] [])                   "abd"
+    , test True     (Desc [Invariant "ab"] [])                    "abc"
+    , test True     (Desc [Invariant "bc"] [])                    "abc"
+    , test True     (Desc [Invariant "ab", Invariant "bc"] [])        "abc"
+    , test False    (Desc [Invariant "ab", Invariant "cd"] [])        "abc"
+    , test True     (Desc [Invariant "ab", Invariant "c"] [])         "abc"
+    , test True     (Desc [Invariant "a", Invariant "c"] [])          "abc"
+    , test True     (Desc [Invariant "cde"] [])                   "abcabcde"
     ] where
         test e d s = (show s ++ show d) ~: e ~=? matches d s
 
@@ -49,14 +49,14 @@ testMatchesExamples = TestLabel "MatchesExamples" $ TestList
     , test True     desc   "Mozilla/5.0(compatible; UX; InfiNet 0.1; Diga; woo) AppleWebKit/420++ (KHTML, like Gecko yeah)(avdn/Panasonic.bd.pro4r.2014) blah"
     ] where
         test e d s = (show s ++ show d) ~: e ~=? matches d s
-        desc = Desc [Exact "Panasonic.bd.pro4r.2014"] [Disallowed "Opera"]
+        desc = Desc [Invariant "Panasonic.bd.pro4r.2014"] [Disallowed "Opera"]
 
 testShow = TestLabel "Show" $ TestList
     [ test   "abc"                                               (Desc [Fuzzy "abc"] [])
-    , test   "[+abc]"                                            (Desc [Exact "abc"] [])
+    , test   "[+abc]"                                            (Desc [Invariant "abc"] [])
     , test   "[vabc000]"                                         (Desc [Version "abc"] [])
-    , test   "[vMozilla/000] ([+PLAYSTATION 3]; 1.00)"           (Desc [Version "Mozilla/", Fuzzy " (", Exact "PLAYSTATION 3", Fuzzy "; 1.00)"] [])
+    , test   "[vMozilla/000] ([+PLAYSTATION 3]; 1.00)"           (Desc [Version "Mozilla/", Fuzzy " (", Invariant "PLAYSTATION 3", Fuzzy "; 1.00)"] [])
     , test   "[-abc]"                                            (Desc [] [Disallowed "abc"])
-    , test   "[vMozilla/000] ([+PLAYSTATION 3]; 1.00)[-ghi]"     (Desc [Version "Mozilla/", Fuzzy " (", Exact "PLAYSTATION 3", Fuzzy "; 1.00)"] [Disallowed "ghi"])
+    , test   "[vMozilla/000] ([+PLAYSTATION 3]; 1.00)[-ghi]"     (Desc [Version "Mozilla/", Fuzzy " (", Invariant "PLAYSTATION 3", Fuzzy "; 1.00)"] [Disallowed "ghi"])
     ] where
         test e d = (show d) ~: e ~=? show d
