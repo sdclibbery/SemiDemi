@@ -7,6 +7,10 @@ import qualified DemiParserTests
 
 {- TODO:
 
+* Fix the use of 'head' in Regression.hs
+ * Empty list means that there are NO matchers setup for this test yet (think TDD red)
+ * More than one entry means multiple could have matched, and they should ALL be shown as possible expected matchers in the results...
+
 * Optimise matching by building a tree of Exact/Disallowed
  ! This a smallish optimisation now, but as the total number of matchers in the .demi file rises, the runtime will rise nonlinearly...
  x Split matching and scoring into separate files
@@ -22,12 +26,6 @@ import qualified DemiParserTests
   ? Alternatively, can we discard some of the possible matchers early this way??
  ? Can we make the lev memoisation cache global so it can share value across UA matches?
   ? Would nee to switch away from the Array based lev algo...
-
-* Sort the 'head' in Regression.hs
- * Empty list means that there are NO matchers setup for this test yet (think TDD red)
- * More than one entry means multiple could have matched, and they should ALL be shown as possible expected matchers in the results...
-
-* Work through and get all regression tests passing...           
 
 * Notes for writing matchers:
  * Ideally, use [+...] with something that uniquely identifies the UA
