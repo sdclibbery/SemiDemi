@@ -10,7 +10,7 @@ import BestMatch
 main = do
 	[target] <- getArgs
 	demi <- readFile "../SemiDemiData/tvs.demi"
-	putStrLn $ either show show $ process target demi
+	putStrLn $ either id id $ process target demi
 
 process :: String -> String -> Either String String
 process target demi = do
